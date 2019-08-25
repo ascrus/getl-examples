@@ -5,7 +5,7 @@ package getl.examples.oracle
 import groovy.transform.BaseScript
 
 // Generate sample data in a H2  database
-runGroovyClass getl.examples.h2.Install
+runGroovyClass getl.examples.h2.H2Init
 
 // Load configuration file
 runGroovyClass getl.examples.oracle.Config
@@ -48,7 +48,7 @@ thread {
         assert oracleTable('customers.phones').countRow() == 7
     }
     addThread {
-        assert oracleTable('sales').countRow() == 250000
+        assert oracleTable('sales').countRow() == configContent.count_sale_rows
     }
 
     exec()

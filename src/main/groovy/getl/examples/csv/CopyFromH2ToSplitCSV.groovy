@@ -9,7 +9,7 @@ package getl.examples.csv
 import groovy.transform.BaseScript
 
 // Generate sample data in a H2  database
-runGroovyClass getl.examples.h2.Install
+runGroovyClass getl.examples.h2.H2Init
 
 // Create csv temporary dataset based on sales
 csvTempWithDataset('sales', embeddedTable('sales')) { file ->

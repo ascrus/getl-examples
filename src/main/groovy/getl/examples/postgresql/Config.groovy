@@ -18,11 +18,8 @@ login = '<postgresql user name>'
 password = '<postgresql user password>'
 */
 configuration {
-    // Clear content configuration
-    clear()
-
     // Directory of configuration file
-    path = (FileUtils.FindParentPath('.', 'src/test/groovy/getl')?:'') + 'tests/postgresql'
+    path = configVars.configPath?:'config'
 
     // Load configuration file
     load'postgresql.conf'

@@ -5,7 +5,7 @@ package getl.examples.mssql
 import groovy.transform.BaseScript
 
 // Generate sample data in a H2  database
-runGroovyClass getl.examples.h2.Install
+runGroovyClass getl.examples.h2.H2Init
 
 // Load configuration file
 runGroovyClass getl.examples.mssql.Config
@@ -61,7 +61,7 @@ thread {
         assert mssqlTable('customers.phones').countRow() == 7
     }
     addThread {
-        assert mssqlTable('sales').countRow() == 250000
+        assert mssqlTable('sales').countRow() == configContent.count_sale_rows
     }
 
     exec()

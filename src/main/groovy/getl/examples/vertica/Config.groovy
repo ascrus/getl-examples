@@ -12,7 +12,7 @@ import groovy.transform.BaseScript
 /*
 Configuration options
 
-Create config file in <project path>/tests/vertica/vertica.conf with syntax:
+Create config file in <project path><PROJECTION DIR>/config/vertica.conf with syntax:
 workPath = '<csv, log and history files directory>'
 driverPath = '<vertica jdbc file path>'
 connectDatabase = '<vertica database name>'
@@ -24,11 +24,8 @@ ssh_password = '<ssh password on Vertica host>'
 ssh_rsakey = '<ssh rsa string key for host>' // use "ssh-keyscan -t rsa <host-name>"
 */
 configuration {
-    // Clear content configuration
-    clear()
-
     // Directory of configuration file
-    path = (FileUtils.FindParentPath('.', 'src/test/groovy/getl')?:'') + 'tests/vertica'
+    path = configVars.configPath?:'config'
 
     // Load configuration file
     load'vertica.conf'

@@ -7,7 +7,7 @@ import groovy.transform.BaseScript
 /*
 Configuration options
 
-Create config file in ./tests/emailer/vertica.conf with syntax:
+Create config file in <PROJECT DIRECTORY>/config/emailer.conf with syntax:
 vars {
     host = 'smtp host server'
     port = <smtp port (default smtp: 25, ssl: 465, tsl:587)>
@@ -21,7 +21,7 @@ vars {
 */
 configuration {
     // Directory of configuration file
-    path = configVars.configPath?:'tests/emailer'
+    path = configVars.configPath?:'config'
 
     // Load configuration file
     load'emailer.conf'
@@ -42,7 +42,7 @@ mail {
     subject = 'Test mail send'
     isHtml = true
     message = '<HTML><BODY><H1>Message</H1>This is test send from getl lang</BODY></HTML>'
-    attachment = new File(config().path + '/emailer.conf')
+    attachment = new File(configuration().path + '/emailer.conf')
     send()
 
     logInfo('Send message complete!')

@@ -18,11 +18,8 @@ login = '<mssql user name>'
 password = '<mssql user password>'
 */
 configuration {
-    // Clear content configuration
-    clear()
-
     // Directory of configuration file
-    path = (FileUtils.FindParentPath('.', 'src/test/groovy/getl')?:'') + 'tests/mssql'
+    path = configVars.configPath?:'config'
 
     // Load configuration file
     load'mssql.conf'

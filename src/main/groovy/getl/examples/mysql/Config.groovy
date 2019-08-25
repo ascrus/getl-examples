@@ -18,11 +18,8 @@ login = '<mysql user name>'
 password = '<mysql user password>'
 */
 configuration {
-    // Clear content configuration
-    clear()
-
     // Directory of configuration file
-    path = (FileUtils.FindParentPath('.', 'src/test/groovy/getl')?:'') + 'tests/mysql'
+    path = configVars.configPath?:'config'
 
     // Load configuration file
     load'mysql.conf'

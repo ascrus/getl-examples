@@ -5,7 +5,7 @@ package getl.examples.mysql
 import groovy.transform.BaseScript
 
 // Generate sample data in a H2  database
-runGroovyClass getl.examples.h2.Install
+runGroovyClass getl.examples.h2.H2Init
 
 // Load configuration file
 runGroovyClass getl.examples.mysql.Config

@@ -18,11 +18,8 @@ login = '<oracle user name>'
 password = '<oracle user password>'
 */
 configuration {
-    // Clear content configuration
-    clear()
-
     // Directory of configuration file
-    path = (FileUtils.FindParentPath('.', 'src/test/groovy/getl')?:'') + 'tests/oracle'
+    path = configVars.configPath?:'config'
 
     // Load configuration file
     load'oracle.conf'

@@ -5,7 +5,7 @@ package getl.examples.hive
 import groovy.transform.BaseScript
 
 // Generate sample data in a H2  database
-runGroovyClass getl.examples.h2.Install
+runGroovyClass getl.examples.h2.H2Init
 
 // Load configuration file
 runGroovyClass getl.examples.hive.Config
@@ -55,7 +55,7 @@ thread {
         assert hiveTable('customers.phones').countRow() == 7
     }
     addThread {
-        assert hiveTable('sales').countRow() == 250000
+        assert hiveTable('sales').countRow() == configContent.count_sale_rows
     }
 
     exec()

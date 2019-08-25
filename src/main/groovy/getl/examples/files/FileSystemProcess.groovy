@@ -8,10 +8,10 @@ import groovy.transform.BaseScript
 
 files {
     // Set root path
-    rootPath = '..'
+    rootPath = FileUtils.FileFromResources('files', 'src/main/resources').path
 
     // Build list of files with parent directory
-    buildListFiles('{packet}/{file}') {
+    buildListFiles('{dir}/{file}') {
         recursive = true // analyze subdirectories
         historyTable = embeddedTable('history') { tableName = 'download_history' } // use temporary history table
         createHistoryTable = true // create history table
@@ -28,13 +28,13 @@ files {
     downloadListFiles {
         historyTable = embeddedTable('history')
         saveDirectoryStructure = true // create analog subdirectories structure
-        filterFiles = "Upper(FILENAME) LIKE '%.GROOVY%'" // download only groovy files
+        filterFiles = "Upper(FILENAME) LIKE '%.TXT%'" // download only groovy files
         orderFiles = ['FILEPATH', 'FILENAME'] // download as sorted by path and file name
         downloadFile { logInfo "Download file ${it.filepath}/${it.filename}"} // print downloaded file name to log
     }
 
     // Repeat build list of files with parent directory (validation fixing files to history table)
-    buildListFiles('{packet}/{file}') {
+    buildListFiles('{dir}/{file}') {
         recursive = true
         historyTable = embeddedTable('history')
     }

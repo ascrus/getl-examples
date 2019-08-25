@@ -23,11 +23,8 @@ hdfsLogin = '<hdfs login>'
 hdfsDir = '<hdfs directory>'
 */
 configuration {
-    // Clear content configuration
-    clear()
-
     // Directory of configuration file
-    path = (FileUtils.FindParentPath('.', 'src/test/groovy/getl')?:'') + 'tests/hive'
+    path = configVars.configPath?:'config'
 
     // Load configuration file
     load'hive.conf'

@@ -8,7 +8,8 @@ import getl.utils.GenerationUtils
 import groovy.transform.BaseScript
 
 // Count sale rows
-def count_sale_rows = 250000
+def count_sale_rows = 10000
+configContent.count_sale_rows = count_sale_rows
 
 // Define H2 tables
 runGroovyClass getl.examples.h2.Tables
@@ -65,7 +66,7 @@ embeddedTable('customers.phones') { table ->
 }
 
 // Load customers data from generated XML file
-runGroovyClass getl.examples.xml.CustomersXML
+runGroovyClass getl.examples.xml.XMLCustomers
 
 // Copy customers rows from xml file to h2 tables customers and customers_phones
 copyRows(xml('customers'), embeddedTable('customers')) {

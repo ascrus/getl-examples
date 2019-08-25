@@ -1,8 +1,7 @@
 package getl.examples.vertica
 
-import getl.utils.FileUtils
+import getl.examples.h2.H2Init
 import groovy.transform.BaseScript
-import getl.examples.h2.Install as H2Install
 
 @BaseScript getl.lang.Getl getl
 
@@ -10,11 +9,8 @@ import getl.examples.h2.Install as H2Install
  * Create Vertica tables and load data from H2 tables to Vertica
  */
 
-assert FileUtils.FileFromResources('fileutils/file.txt') != null
-assert FileUtils.FileFromResources('lang/vertica/init.sql') != null
-
 // Generate sample data in a H2  database
-runGroovyClass H2Install, true
+runGroovyClass H2Init, true
 
 // Define Vertica tables
 runGroovyClass getl.examples.vertica.Tables, true
@@ -22,8 +18,7 @@ runGroovyClass getl.examples.vertica.Tables, true
 profile("Create Vertica objects") {
     // Run sql script for create schemata and tables
     sql {
-        loadResource 'lang/vertica/init.sql'
-        runSql false
+        exec 'CREATE SCHEMA IF NOT EXISTS getl_demo;'
         logInfo'Created schema getl_demo.'
     }
 
@@ -74,7 +69,7 @@ thread {
         assert verticaTable('customers.phones').countRow() == 7
     }
     addThread {
-        assert verticaTable('sales').countRow() == 250000
+        assert verticaTable('sales').countRow() == configContent.count_sale_rows
     }
 
     exec()
