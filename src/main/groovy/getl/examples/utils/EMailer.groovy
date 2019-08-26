@@ -1,48 +1,27 @@
+/**
+ * Send HTML mail with attachment file to specified email
+ */
+
 package getl.examples.utils
+
+import getl.utils.FileUtils
+import groovy.transform.BaseScript
 
 @BaseScript getl.lang.Getl getl
 
-import groovy.transform.BaseScript
+// Load configuration file
+runGroovyClass getl.examples.utils.Config, true
 
-/*
-Configuration options
-
-Create config file in <PROJECT DIRECTORY>/config/emailer.conf with syntax:
-vars {
-    host = 'smtp host server'
-    port = <smtp port (default smtp: 25, ssl: 465, tsl:587)>
-    ssl = <ssl protocol true/false>
-    tls = <tls authentication true/false>
-    user = '<user name>'
-    password = '<password>'
-    fromAddress = '<from address by mail>'
-    toAddress = '<comma separated destination addresses example a@google.com, b@yandex.ru>
-}
-*/
-configuration {
-    // Directory of configuration file
-    path = configVars.configPath?:'config'
-
-    // Load configuration file
-    load'emailer.conf'
-
-    // Print message to log file and console
-    logConfig "Load configuration emailer.conf complete. Use smtp server \"${configVars.host}\"."
-}
-
+// Mail commands
 mail {
-    host = configVars.host
-    port = configVars.port
-    ssl = configVars.ssl
-    tls = configVars.tls
-    user = configVars.user
-    password = configVars.password
-    fromAddress = configVars.fromAddress
-    toAddress = configVars.toAddress
+    // Use parameters from emailers.mail configurarion section
+    config = 'mail'
+
     subject = 'Test mail send'
     isHtml = true
     message = '<HTML><BODY><H1>Message</H1>This is test send from getl lang</BODY></HTML>'
-    attachment = new File(configuration().path + '/emailer.conf')
+    attachment = FileUtils.FileFromResources('files/dir1/file1.txt', 'src/main/resources')
+
     send()
 
     logInfo('Send message complete!')

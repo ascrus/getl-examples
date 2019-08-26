@@ -1,16 +1,18 @@
+/**
+ * Create Oracle tables and load data from embedded tables
+ */
 package getl.examples.oracle
 
-@BaseScript getl.lang.Getl getl
-
+import getl.lang.Getl
 import groovy.transform.BaseScript
 
-// Generate sample data in a H2  database
-runGroovyClass getl.examples.h2.H2Init
+@BaseScript Getl main
 
-// Load configuration file
-runGroovyClass getl.examples.oracle.Config
-// Define object as Oracle tables
-runGroovyClass getl.examples.oracle.Tables
+// Generate sample data in a H2  database
+runGroovyClass getl.examples.h2.H2Init, true
+
+// Define Oracle tables
+runGroovyClass getl.examples.oracle.Tables, true
 
 profile("Create Oracle objects") {
     processDatasets(ORACLETABLE) { tableName ->
@@ -48,7 +50,7 @@ thread {
         assert oracleTable('customers.phones').countRow() == 7
     }
     addThread {
-        assert oracleTable('sales').countRow() == configContent.count_sale_rows
+        assert oracleTable('sales').countRow() == configContent.countSales
     }
 
     exec()

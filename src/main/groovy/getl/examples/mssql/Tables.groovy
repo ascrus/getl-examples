@@ -1,17 +1,22 @@
+/**
+ * Define MSSQL tables
+ */
 package getl.examples.mssql
 
-@BaseScript getl.lang.Getl getl
+import getl.lang.Getl
+
+@BaseScript Getl main
 
 import groovy.transform.BaseScript
 
-// Oracle database connection (using config content variables)
+// Load configuration file
+runGroovyClass getl.examples.utils.Config, true
+
+// MSSQL database connection
 useMssqlConnection mssqlConnection('demo', true) {
-    driverPath = configContent.driverPath
-    connectHost = configContent.connectHost
-    connectDatabase = configContent.connectDatabase
+    // Use parameters from [connections.mssql] section
+    config = 'mssql'
     schemaName = 'getl_demo'
-    login = configContent.login
-    password = configContent.password
     sqlHistoryFile = "${configContent.workPath}/mssql.{date}.sql"
 }
 

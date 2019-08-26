@@ -1,16 +1,18 @@
+/**
+ * Create PostgreSQL tables and load data from embedded tables
+ */
 package getl.examples.postgresql
 
-@BaseScript getl.lang.Getl getl
-
+import getl.lang.Getl
 import groovy.transform.BaseScript
 
-// Generate sample data in a H2  database
-runGroovyClass getl.examples.h2.H2Init
+@BaseScript Getl main
 
-// Load configuration file
-runGroovyClass getl.examples.postgresql.Config
-// Define object as PostgreSQL tables
-runGroovyClass getl.examples.postgresql.Tables
+// Generate sample data in a H2  database
+runGroovyClass getl.examples.h2.H2Init, true
+
+// Define PostgreSQL tables
+runGroovyClass getl.examples.postgresql.Tables, true
 
 profile("Create PostgreSQL objects") {
     // Run sql script for create schemata and tables
@@ -54,7 +56,7 @@ thread {
         assert postgresqlTable('customers.phones').countRow() == 7
     }
     addThread {
-        assert postgresqlTable('sales').countRow() == configContent.count_sale_rows
+        assert postgresqlTable('sales').countRow() == configContent.countSales
     }
 
     exec()

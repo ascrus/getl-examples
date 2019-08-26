@@ -1,13 +1,14 @@
 /**
- * This example shows how to read data from a XML file and write it into two h2 tables as master-detail.
- * P.S. This is script used from h2 installation script.
+ * Generate customers and phones data as XML file
+ * <br>P.S. This is script used from h2 installation script.
  */
 
 package getl.examples.xml
 
+import getl.lang.Getl
 import groovy.transform.BaseScript
 
-@BaseScript getl.lang.Getl getl
+@BaseScript Getl main
 
 // Define xml file
 xml('customers', true) { xml ->
@@ -19,7 +20,7 @@ xml('customers', true) { xml ->
     field('customer_type') { alias = '@'} // Customer value are stored as attribute value
     field('phones') { type = objectFieldType } // Phones are stored as array list values and will be manual parsing
 
-    // Write xml text to temporary file
+    // Write text to temporary XML file
     textFile { file ->
         // This file will be storage in temp directory and have randomize file name.
         temporaryFile = true

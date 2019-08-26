@@ -1,16 +1,18 @@
+/**
+ * Create Hive tables and load data from embedded tables
+ */
 package getl.examples.hive
 
-@BaseScript getl.lang.Getl getl
-
+import getl.lang.Getl
 import groovy.transform.BaseScript
 
-// Generate sample data in a H2  database
-runGroovyClass getl.examples.h2.H2Init
+@BaseScript Getl main
 
-// Load configuration file
-runGroovyClass getl.examples.hive.Config
-// Define object as Hive tables
-runGroovyClass getl.examples.hive.Tables
+// Generate H2 sample data
+runGroovyClass getl.examples.h2.H2Init, true
+
+// Define Hive tables
+runGroovyClass getl.examples.hive.Tables, true
 
 profile("Create Hive objects") {
     // Run sql script for create schemata and tables
@@ -19,6 +21,7 @@ profile("Create Hive objects") {
         logInfo'Created schema getl_demo.'
     }
 
+    // Create or truncate tables
     processDatasets(HIVETABLE) { tableName ->
         hiveTable(tableName) { table ->
             if (!table.exists) {
@@ -55,7 +58,7 @@ thread {
         assert hiveTable('customers.phones').countRow() == 7
     }
     addThread {
-        assert hiveTable('sales').countRow() == configContent.count_sale_rows
+        assert hiveTable('sales').countRow() == configContent.countSales
     }
 
     exec()

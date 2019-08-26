@@ -1,31 +1,30 @@
+/**
+ * Create H2 embedded tables and load random generated data to tables
+ */
 package getl.examples.h2
 
+import getl.lang.Getl
 import getl.utils.DateUtils
 import getl.utils.GenerationUtils
-
-@BaseScript getl.lang.Getl getl
-
 import groovy.transform.BaseScript
 
-// Count sale rows
-def count_sale_rows = 10000
-configContent.count_sale_rows = count_sale_rows
+@BaseScript Getl main
 
 // Define H2 tables
 runGroovyClass getl.examples.h2.Tables
 
+// Count sale rows
+def count_sale_rows = configContent.countSales
+
+// Create tables
+processDatasets(EMBEDDEDTABLE) {
+    def table = embeddedTable(it)
+    logInfo "Create H2 table $table"
+    table.create()
+}
+
 // Price table
 embeddedTable('prices') { table ->
-    tableName = 'prices'
-    field('id') { type = integerFieldType; isKey = true }
-    field('name') { type = stringFieldType; isNull = false; length = 50 }
-    field('create_date') { type = datetimeFieldType; isNull = false }
-    field('price') { type = numericFieldType; isNull = false; length = 9; precision = 2 }
-    field('description') { type = textFieldType }
-
-    create()
-    logInfo "Created h2 table $table"
-
     logFine"Generating data to h2 table $table ..."
     rowsTo(table) {
         // User code
@@ -42,27 +41,6 @@ embeddedTable('prices') { table ->
             logInfo"$countRow rows saved to h2 table $table"
         }
     }
-}
-
-// Customers table
-embeddedTable('customers') { table ->
-    tableName = 'customers'
-    field('id') { type = integerFieldType; isKey = true }
-    field('name') { length = 50 }
-    field('customer_type') { length = 10 }
-
-    create()
-    logInfo "Created h2 table $table"
-}
-
-// Customer phones table
-embeddedTable('customers.phones') { table ->
-    tableName = 'customer_phones'
-    field('customer_id') { type = integerFieldType; isKey = true }
-    field('phone') { length = 50; isKey = true }
-
-    create()
-    logInfo "Created h2 table $table"
 }
 
 // Load customers data from generated XML file
@@ -91,18 +69,6 @@ assert embeddedTable('customers.phones').countRow() == 7
 
 // Sales table
 embeddedTable('sales') { table ->
-    tableName = 'sales'
-    field('id') { type = bigintFieldType; isKey = true }
-    field('price_id') { type = integerFieldType; isNull = false }
-    field('customer_id') { type = integerFieldType; isNull = false }
-    field('sale_date') { type = datetimeFieldType; isNull = false }
-    field('sale_count') { type = bigintFieldType; isNull = false }
-    field('sale_sum') { type = numericFieldType; isNull = false; length = 12; precision = 2 }
-    field('description') { type = stringFieldType; length = 50 }
-
-    create()
-    logInfo "Created h2 table $table"
-
     logFine"Generating data to h2 table $table ..."
     rowsTo(table) {
         // Lookup price map structure

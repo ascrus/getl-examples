@@ -1,12 +1,13 @@
 /**
- *  This example shows how to write data divided into portions of files and then read such files as a single data set.
+ *  Write data divided into portions of files and then read such files as a single data set
  */
 
 package getl.examples.csv
 
-@BaseScript getl.lang.Getl getl
-
+import getl.lang.Getl
 import groovy.transform.BaseScript
+
+@BaseScript Getl main
 
 // Generate sample data in a H2  database
 runGroovyClass getl.examples.h2.H2Init
@@ -22,7 +23,8 @@ csvTempWithDataset('sales', embeddedTable('sales')) { file ->
     // File writing options
     writeOpts {
         def cur = 0
-        splitFile { cur++; cur % 50000 == 0 } // The definition that the data record should be moved to the next file
+        def div = ((configContent.countSales as Integer) / 4).intValue()
+        splitFile { cur++; cur % div == 0 } // The definition that the data record should be moved to the next file
     }
 
     // Copy sample data from table to file

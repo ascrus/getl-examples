@@ -1,12 +1,12 @@
 /**
- * This example shows how to read data from a JSON file and write it into two csv temporary files as master-detail.
+ * Read data from a JSON file and write it into two csv temporary files as master-detail.
  */
-
 package getl.examples.json
 
+import getl.lang.Getl
 import groovy.transform.BaseScript
 
-@BaseScript getl.lang.Getl getl
+@BaseScript Getl main
 
 // Define json file
 json('customers', true) { json ->

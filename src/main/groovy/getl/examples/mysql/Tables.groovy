@@ -1,17 +1,19 @@
+/**
+ * Define Mysql tables
+ */
 package getl.examples.mysql
 
 @BaseScript getl.lang.Getl getl
 
 import groovy.transform.BaseScript
 
-// Oracle database connection (using config content variables)
+// Load configuration file
+runGroovyClass getl.examples.utils.Config, true
+
+// Mysql database connection
 useMysqlConnection mysqlConnection('demo', true) {
-    driverPath = configContent.driverPath
-    connectHost = configContent.connectHost
-    connectDatabase = configContent.connectDatabase
+    config = 'mysql'
     schemaName = 'getl_demo'
-    login = configContent.login
-    password = configContent.password
     sqlHistoryFile = "${configContent.workPath}/mysql.{date}.sql"
 }
 

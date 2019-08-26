@@ -1,15 +1,15 @@
+/**
+ * Copy Excel file to temporary CSV file
+ */
 package getl.examples.excel
 
 import getl.data.Field
+import getl.lang.Getl
 import getl.tfs.TFS
 import getl.utils.FileUtils
 import groovy.transform.BaseScript
 
-@BaseScript getl.lang.Getl getl
-
-/**
- * Copy Excel file to temporary CSV file
- */
+@BaseScript Getl main
 
 // Copy excel prototype file to tempoprary directory
 def excelPrototypeName = FileUtils.FileFromResources('excel/data.xlsx', 'src/main/resources').path

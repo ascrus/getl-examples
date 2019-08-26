@@ -1,16 +1,15 @@
+/**
+ * Create Vertica tables and load data from embedded tables
+ */
 package getl.examples.vertica
 
-import getl.examples.h2.H2Init
+import getl.lang.Getl
 import groovy.transform.BaseScript
 
-@BaseScript getl.lang.Getl getl
-
-/**
- * Create Vertica tables and load data from H2 tables to Vertica
- */
+@BaseScript Getl main
 
 // Generate sample data in a H2  database
-runGroovyClass H2Init, true
+runGroovyClass getl.examples.h2.H2Init, true
 
 // Define Vertica tables
 runGroovyClass getl.examples.vertica.Tables, true
@@ -69,7 +68,7 @@ thread {
         assert verticaTable('customers.phones').countRow() == 7
     }
     addThread {
-        assert verticaTable('sales').countRow() == configContent.count_sale_rows
+        assert verticaTable('sales').countRow() == configContent.countSales
     }
 
     exec()

@@ -1,10 +1,14 @@
+/**
+ * Copy files from directories to other location
+ */
+
 package getl.examples.files
 
-import getl.data.Field
+import getl.lang.Getl
 import getl.utils.FileUtils
 import groovy.transform.BaseScript
 
-@BaseScript getl.lang.Getl getl
+@BaseScript Getl main
 
 files {
     // Set root path

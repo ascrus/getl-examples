@@ -1,28 +1,29 @@
+/**
+ * Create MSSQL tables and load data from embedded tables
+ */
 package getl.examples.mssql
 
-@BaseScript getl.lang.Getl getl
+import getl.lang.Getl
+
+@BaseScript Getl main
 
 import groovy.transform.BaseScript
 
-// Generate sample data in a H2  database
-runGroovyClass getl.examples.h2.H2Init
+// Generate H2 sample data
+runGroovyClass getl.examples.h2.H2Init, true
 
-// Load configuration file
-runGroovyClass getl.examples.mssql.Config
-// Define object as Oracle tables
-runGroovyClass getl.examples.mssql.Tables
+// Define MSSQL tables
+runGroovyClass getl.examples.mssql.Tables, true
 
 profile("Create MSSQL objects") {
     // Run sql script for create schemata and tables
     sql {
-        exec """
-BEGIN BLOCK;
+        exec false,  """
 IF schema_id('getl_demo') IS NULL
 BEGIN 
     EXEC sp_executesql N'CREATE SCHEMA getl_demo'
     COMMIT
-END;
-END BLOCK;"""
+END"""
         logInfo'Created schema getl_demo.'
     }
 
@@ -61,7 +62,7 @@ thread {
         assert mssqlTable('customers.phones').countRow() == 7
     }
     addThread {
-        assert mssqlTable('sales').countRow() == configContent.count_sale_rows
+        assert mssqlTable('sales').countRow() == configContent.countSales
     }
 
     exec()

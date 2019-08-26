@@ -1,16 +1,17 @@
+/**
+ * Create Mysql tables and load data from embedded tables
+ */
 package getl.examples.mysql
 
 @BaseScript getl.lang.Getl getl
 
 import groovy.transform.BaseScript
 
-// Generate sample data in a H2  database
-runGroovyClass getl.examples.h2.H2Init
+// Generate H2 sample data
+runGroovyClass getl.examples.h2.H2Init, true
 
-// Load configuration file
-runGroovyClass getl.examples.mysql.Config
-// Define object as MySQL tables
-runGroovyClass getl.examples.mysql.Tables
+// Define MySQL tables
+runGroovyClass getl.examples.mysql.Tables, true
 
 profile("Create MySQL objects") {
     // Run sql script for create schemata and tables
@@ -54,7 +55,7 @@ thread {
         assert mysqlTable('customers.phones').countRow() == 7
     }
     addThread {
-        assert mysqlTable('sales').countRow() == 250000
+        assert mysqlTable('sales').countRow() == configContent.countSales
     }
 
     exec()

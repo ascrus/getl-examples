@@ -1,24 +1,20 @@
+/**
+ * Define Vertica tables
+ */
 package getl.examples.vertica
 
+import getl.lang.Getl
 import groovy.transform.BaseScript
 
-@BaseScript getl.lang.Getl getl
+@BaseScript Getl main
 
 // Load configuration file
-runGroovyClass getl.examples.vertica.Config, true
+runGroovyClass getl.examples.utils.Config, true
 
-/**
- * Define Vertica connection and tables
- */
-
-// Vertica database connection (using config content variables)
+// Vertica connection
 useVerticaConnection verticaConnection('demo', true) {
-    driverPath = configContent.driverPath
-    connectHost = configContent.connectHost
-    connectDatabase = configContent.connectDatabase
+    config = 'vertica'
     schemaName = 'getl_demo'
-    login = configContent.login
-    password = configContent.password
     sqlHistoryFile = "${configContent.workPath}/vertica.{date}.sql"
 }
 

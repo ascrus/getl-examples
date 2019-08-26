@@ -1,22 +1,21 @@
+/**
+ * Define Hive tables
+ */
 package getl.examples.hive
 
-@BaseScript getl.lang.Getl getl
-
+import getl.lang.Getl
 import groovy.transform.BaseScript
 
-// Hive database connection (using config content variables)
+@BaseScript Getl main
+
+// Load configuration file
+runGroovyClass getl.examples.utils.Config, true
+
+// Hive database connection
 useHiveConnection hiveConnection('demo', true) {
-    driverPath = configContent.driverPath
-    vendor = configContent.vendor
-    connectHost = configContent.connectHost
-    connectDatabase = configContent.connectDatabase
+    // Use parameters from [connections.hive] section
+    config = 'hive'
     schemaName = 'getl_demo'
-    login = configContent.login
-    password = configContent.password
-    hdfsHost = configContent.hdfsHost
-    hdfsPort = configContent.hdfsPort
-    hdfsDir = configContent.hdfsDir
-    hdfsLogin = configContent.hdfsLogin
     sqlHistoryFile = "${configContent.workPath}/hive.{date}.sql"
 }
 

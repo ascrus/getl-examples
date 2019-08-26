@@ -1,16 +1,19 @@
+/**
+ * Define Oracle tables
+ */
 package getl.examples.oracle
 
-@BaseScript getl.lang.Getl getl
-
 import groovy.transform.BaseScript
+import getl.lang.Getl
 
-// Oracle database connection (using config content variables)
+@BaseScript Getl main
+
+// Load configuration file
+runGroovyClass getl.examples.utils.Config, true
+
+// Oracle database connection
 useOracleConnection oracleConnection('demo', true) {
-    driverPath = configContent.driverPath
-    connectHost = configContent.connectHost
-    connectDatabase = configContent.connectDatabase
-    login = configContent.login
-    password = configContent.password
+    config = 'oracle'
     sqlHistoryFile = "${configContent.workPath}/oracle.{date}.sql"
 }
 

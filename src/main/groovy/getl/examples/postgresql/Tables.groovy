@@ -1,17 +1,20 @@
+/**
+ * Define PostgreSQL tables
+ */
 package getl.examples.postgresql
 
-@BaseScript getl.lang.Getl getl
-
+import getl.lang.Getl
 import groovy.transform.BaseScript
 
-// PostgreSQL database connection (using config content variables)
+@BaseScript Getl main
+
+// Load configuration file
+runGroovyClass getl.examples.utils.Config, true
+
+// PostgreSQL database connection
 usePostgresqlConnection postgresqlConnection('demo', true) {
-    driverPath = configContent.driverPath
-    connectHost = configContent.connectHost
-    connectDatabase = configContent.connectDatabase
+    config = 'postgresql'
     schemaName = 'getl_demo'
-    login = configContent.login
-    password = configContent.password
     sqlHistoryFile = "${configContent.workPath}/postgresql.{date}.sql"
 }
 
