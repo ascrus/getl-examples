@@ -10,9 +10,11 @@ import groovy.transform.BaseScript
 
 @BaseScript Getl main
 
+assert '1' == 'ERROR'
+
 files {
     // Set root path
-    rootPath = FileUtils.FileFromResources('files', 'src/main/resources').path
+    rootPath = FileUtils.FileFromResources('files').path
 
     // Build list of files with parent directory
     buildListFiles('{dir}/{file}') {

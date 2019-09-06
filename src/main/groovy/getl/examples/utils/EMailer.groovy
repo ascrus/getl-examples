@@ -7,7 +7,7 @@ package getl.examples.utils
 import getl.utils.FileUtils
 import groovy.transform.BaseScript
 
-@BaseScript getl.lang.Getl getl
+@BaseScript getl.lang.Getl main
 
 // Load configuration file
 runGroovyClass getl.examples.utils.Config, true
@@ -20,9 +20,9 @@ mail {
     subject = 'Test mail send'
     isHtml = true
     message = '<HTML><BODY><H1>Message</H1>This is test send from getl lang</BODY></HTML>'
-    attachment = FileUtils.FileFromResources('files/dir1/file1.txt', 'src/main/resources')
+    attachment = FileUtils.FileFromResources('/files/dir1/file1.txt')
 
     send()
 
-    logInfo('Send message complete!')
+    logInfo'Send message complete!'
 }

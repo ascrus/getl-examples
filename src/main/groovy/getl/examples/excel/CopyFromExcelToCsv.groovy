@@ -11,11 +11,10 @@ import groovy.transform.BaseScript
 
 @BaseScript Getl main
 
+def resfileName = '/excel/data.xlsx'
+
 // Copy excel prototype file to tempoprary directory
-def excelPrototypeName = FileUtils.FileFromResources('excel/data.xlsx', 'src/main/resources').path
-def excelDestName = "${TFS.systemPath}/data.xlsx"
-FileUtils.CopyToFile(excelPrototypeName, excelDestName, true)
-new File(excelDestName).deleteOnExit()
+def excelDestName = FileUtils.FileFromResources(resfileName).path
 
 excel { dataset ->
     connection = excelConnection {
