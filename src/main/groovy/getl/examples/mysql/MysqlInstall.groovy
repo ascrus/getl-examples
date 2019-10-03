@@ -3,6 +3,9 @@
  */
 package getl.examples.mysql
 
+import getl.examples.patterns.FillingTablesWithSampleData
+import getl.examples.patterns.InitTables
+
 @BaseScript getl.lang.Getl getl
 
 import groovy.transform.BaseScript
@@ -15,48 +18,24 @@ runGroovyClass getl.examples.mysql.Tables, true
 
 profile("Create MySQL objects") {
     // Run sql script for create schemata and tables
-    sql {
+    sql(mysqlConnection('mysql:con')) {
         exec 'CREATE SCHEMA IF NOT EXISTS getl_demo;'
         logInfo'Created schema getl_demo.'
     }
 
-    processDatasets(MYSQLTABLE) { tableName ->
-        mysqlTable(tableName) { table ->
-            if (!table.exists) {
-                // Create table in database
-                create()
-                logInfo "Created table $tableName."
-            }
-            else {
-                truncate()
-                logInfo "Truncated table $tableName."
-            }
+    historypoint('mysql:history') {
+        if (!exists) {
+            create(true)
+            logInfo "Created history point table $it"
+        } else {
+            truncate()
+            logInfo "Truncated history point table $it"
         }
     }
 }
 
-thread {
-    run(listDatasets(MYSQLTABLE)) { tableName ->
-        // Copy rows from the embedded table to the MySQL table
-        copyRows(embeddedTable(tableName), mysqlTable(tableName)) {
-            done { logInfo "Copied $countRow rows of $tableName from the embedded table to the MySQL table" }
-        }
-    }
-}
+// Create MySQL tables
+runGroovyClass InitTables, { groupName = 'mysql' }
 
-thread {
-    addThread {
-        assert mysqlTable('prices').countRow() == 7
-    }
-    addThread {
-        assert mysqlTable('customers').countRow() == 3
-    }
-    addThread {
-        assert mysqlTable('customers.phones').countRow() == 7
-    }
-    addThread {
-        assert mysqlTable('sales').countRow() == configContent.countSales
-    }
-
-    exec()
-}
+// Filling data to MySQL tables
+runGroovyClass FillingTablesWithSampleData, { sourceGroup = 'samples'; destGroup = 'mysql' }

@@ -3,6 +3,7 @@
  */
 package getl.examples.vertica
 
+import getl.examples.patterns.*
 import getl.lang.Getl
 import groovy.transform.BaseScript
 
@@ -14,62 +15,27 @@ runGroovyClass getl.examples.h2.H2Init, true
 // Define Vertica tables
 runGroovyClass getl.examples.vertica.Tables, true
 
-profile("Create Vertica objects") {
+profile("Create Vertica schema") {
     // Run sql script for create schemata and tables
-    sql {
+    sql(verticaConnection('vertica:con')) {
         exec 'CREATE SCHEMA IF NOT EXISTS getl_demo;'
-        logInfo'Created schema getl_demo.'
+        logInfo'Created schema getl_demo'
     }
 
-    historypoint('vertica.demo') {
+    // Create history table
+    historypoint('vertica:history') {
         if (!exists) {
             create(true)
-            logInfo 'History point table created.'
-        }
-        else {
+            logInfo "Created history point table $it"
+        } else {
             truncate()
-            logInfo 'History point table cleared.'
-        }
-    }
-
-    processDatasets(VERTICATABLE) { tableName ->
-        verticaTable(tableName) { table ->
-            if (!table.exists) {
-                // Create table in database
-                create ifNotExists: true
-                logInfo "Created table $tableName."
-            }
-            else {
-                truncate()
-                logInfo "Truncated table $tableName."
-            }
+            logInfo "Truncated history point table $it"
         }
     }
 }
 
-thread {
-    run(listDatasets(VERTICATABLE)) { tableName ->
-        // Copy rows from the embedded table to the Vertica table
-        copyRows(embeddedTable(tableName), verticaTable(tableName)) {
-            bulkLoad = true
-            done { logInfo "Copied $countRow rows of $tableName from the embedded table to the Vertica table" }
-        }
-    }
-}
+// Create Vertica tables
+runGroovyClass InitTables, { groupName = 'vertica' }
 
-thread {
-    addThread {
-        assert verticaTable('prices').countRow() == 7
-    }
-    addThread {
-        assert verticaTable('customers').countRow() == 3
-    }
-    addThread {
-        assert verticaTable('customers.phones').countRow() == 7
-    }
-    addThread {
-        assert verticaTable('sales').countRow() == configContent.countSales
-    }
-
-    exec()
-}
+// Filling data to Vertica tables
+runGroovyClass FillingTablesWithSampleData, { sourceGroup = 'samples'; destGroup = 'vertica' }

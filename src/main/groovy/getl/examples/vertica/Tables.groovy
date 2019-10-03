@@ -11,16 +11,19 @@ import groovy.transform.BaseScript
 // Load configuration file
 runGroovyClass getl.examples.utils.Config, true
 
+forGroup 'vertica'
+
 // Vertica connection
-useVerticaConnection verticaConnection('demo', true) {
-    config = 'vertica'
+useVerticaConnection verticaConnection('con', true) {
+    useConfig 'vertica'
     schemaName = 'getl_demo'
     sqlHistoryFile = "${configContent.workPath}/vertica.{date}.sql"
 }
 
-historypoint('vertica.demo', true) {
+// History table for incremental load
+historypoint('history', true) {
     schemaName = connection.schemaName
-    tableName = 'demo_history_point'
+    tableName = 'history_point'
     saveMethod = insertSave
 }
 
@@ -62,4 +65,11 @@ verticaTable('sales', true) {
         orderBy = ['sale_date', 'price_id', 'customer_id']
         segmentedBy = 'hash(id) all nodes'
     }
+}
+
+// Query to get a list of months of sales
+query('sales.part', true) {
+    setQuery """SELECT DISTINCT Trunc(sale_date, 'month') as month 
+                FROM ${verticaTable('sales').fullTableName}
+                ORDER BY month"""
 }

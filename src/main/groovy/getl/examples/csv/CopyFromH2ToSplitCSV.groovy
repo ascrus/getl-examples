@@ -10,10 +10,13 @@ import groovy.transform.BaseScript
 @BaseScript Getl main
 
 // Generate sample data in a H2  database
-runGroovyClass getl.examples.h2.H2Init
+runGroovyClass getl.examples.h2.H2Init, true
+
+def salesTable = embeddedTable('samples:sales')
+def countSales = configContent.countSales as Integer
 
 // Create csv temporary dataset based on sales
-csvTempWithDataset('sales', embeddedTable('sales')) { file ->
+def salesFile = csvTempWithDataset('#sales', salesTable) {
     // File reading options
     readOpts {
         isSplit = true // Reads a chunked file
@@ -23,31 +26,40 @@ csvTempWithDataset('sales', embeddedTable('sales')) { file ->
     // File writing options
     writeOpts {
         def cur = 0
-        def div = ((configContent.countSales as Integer) / 4).intValue()
+        def div = (countSales / 4).intValue()
         splitFile { cur++; cur % div == 0 } // The definition that the data record should be moved to the next file
     }
-
-    // Copy sample data from table to file
-    copyRows(embeddedTable('sales'), file)
-    logInfo "$writeRows write to $file with $countWritePortions partition ($countWriteCharacters characters)"
-
-    // Get a list of recorded files by mask
-    def files = fileConnection.listFiles {
-        // Use file mask type
-        type = fileType
-        // Use sort by name
-        sort = nameSort
-        // Use file name mask plus chunk number
-        mask = "${file.fileName}[.][0-9]+"
-    }
-    logInfo "Detected ${files.collect { File f -> f.name + '(' + f.size() + ' bytes)' }} files"
-    assert files.size() == countWritePortions
-
-    // Read split data files
-    rowProcess(file) {
-        process { assert it.price_id in (1..7) }
-        done { logInfo "$countRow read from $file with ${file.countReadPortions} partition" }
-    }
-
-    assert countReadPortions == countWritePortions
 }
+
+// Copy sample data from table to file
+copyRows(salesTable, salesFile)
+logInfo "${salesFile.writeRows} write to $salesFile with ${salesFile.countWritePortions} partition (${salesFile.countWriteCharacters} characters)"
+
+// Get a list of recorded files by mask
+def files = csvTempConnection().listFiles {
+    // Use file mask type
+    type = fileType
+    // Use sort by name
+    sort = nameSort
+    // Use file name mask plus chunk number
+    mask = "${salesFile.fileName}[.][0-9]+"
+}
+testCase {
+    assertEquals(salesFile.countWritePortions, files.size())
+}
+logInfo "Detected ${files.collect { File f -> f.name + '(' + f.size() + ' bytes)' }} files"
+
+// Read split data files
+rowProcess(salesFile) {
+    readRow { row ->
+        testCase {
+            assertTrue(row.price_id in (1..7))
+        }
+    }
+    testCase {
+        assertEquals(salesFile.countWritePortions, salesFile.countReadPortions)
+    }
+    logInfo "$countRow read from $salesFile with ${salesFile.countReadPortions} partition"
+}
+
+unregisterDataset '#*'

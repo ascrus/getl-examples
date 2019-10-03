@@ -5,6 +5,10 @@ import groovy.transform.BaseScript
 
 @BaseScript Getl main
 
+logging {
+    logPrintConfigMessage = true
+}
+
 configuration {
     // Directory of configuration file
     path = configVars.configPath?:'config'

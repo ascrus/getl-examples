@@ -12,12 +12,21 @@ import groovy.transform.BaseScript
 // Load configuration file
 runGroovyClass getl.examples.utils.Config, true
 
+forGroup 'mssql'
+
 // MSSQL database connection
-useMssqlConnection mssqlConnection('demo', true) {
+useMssqlConnection mssqlConnection('con', true) {
     // Use parameters from [connections.mssql] section
-    config = 'mssql'
+    useConfig 'mssql'
     schemaName = 'getl_demo'
     sqlHistoryFile = "${configContent.workPath}/mssql.{date}.sql"
+}
+
+// History table for incremental load
+historypoint('history', true) {
+    schemaName = connection.schemaName
+    tableName = 'history_point'
+    saveMethod = mergeSave
 }
 
 // Price table
@@ -58,4 +67,11 @@ mssqlTable('sales', true) {
     readOpts {
         withHint = 'NOLOCK'
     }
+}
+
+// Query to get a list of months of sales
+query('sales.part', true) {
+    setQuery """SELECT DISTINCT DATEFROMPARTS(Year(sale_date), Month(sale_date), 1) as month  
+                FROM ${mssqlTable('sales').fullTableName}
+                ORDER BY month"""
 }

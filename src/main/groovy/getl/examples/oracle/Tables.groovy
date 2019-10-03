@@ -11,10 +11,19 @@ import getl.lang.Getl
 // Load configuration file
 runGroovyClass getl.examples.utils.Config, true
 
+forGroup 'oracle'
+
 // Oracle database connection
-useOracleConnection oracleConnection('demo', true) {
-    config = 'oracle'
+useOracleConnection oracleConnection('con', true) {
+    useConfig 'oracle'
     sqlHistoryFile = "${configContent.workPath}/oracle.{date}.sql"
+}
+
+// History table for incremental load
+historypoint('history', true) {
+    schemaName = connection.schemaName
+    tableName = 'history_point'
+    saveMethod = mergeSave
 }
 
 // Price table
@@ -55,4 +64,11 @@ oracleTable('sales', true) {
     readOpts {
         hints = 'PARALLEL'
     }
+}
+
+// Query to get a list of months of sales
+query('sales.part', true) {
+    setQuery """SELECT DISTINCT Trunc(sale_date, 'month') as month 
+                FROM ${oracleTable('sales').fullTableName}
+                ORDER BY month"""
 }

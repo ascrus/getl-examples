@@ -16,20 +16,23 @@ def resfileName = '/excel/data.xlsx'
 // Copy excel prototype file to tempoprary directory
 def excelDestName = FileUtils.FileFromResources(resfileName).path
 
-excel { dataset ->
-    connection = excelConnection {
+excel {
+    useConnection excelConnection {
         fileName = excelDestName
         listName = 'list1'
         header = true
     }
 
-    copyRows(dataset, csvTempWithDataset('demo', dataset))
+    copyRows(it, csvTempWithDataset('#excel.data', it))
 
     assert field('a').type == Field.numericFieldType
     assert field('b').type == Field.numericFieldType
     assert field('c').type == Field.stringFieldType
 }
 
-rowProcess(csvTemp('demo')) {
-    process { logInfo(it) }
+rowProcess(csvTemp('#excel.data')) {
+    readRow { logInfo(it) }
+    logInfo "$countRow rows from excel read"
 }
+
+unregisterDataset '#*'

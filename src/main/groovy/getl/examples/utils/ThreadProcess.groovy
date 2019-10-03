@@ -7,7 +7,8 @@ import groovy.transform.BaseScript
 runGroovyClass getl.examples.h2.H2Init
 
 thread {
-    run(listDatasets(EMBEDDEDTABLE), 2) {
-        runGroovyClass ThreadProcessTable, [tableName: it]
+    useList listDatasets('samples:*', [EMBEDDEDTABLE])
+    run(2) { table ->
+        runGroovyClass ThreadProcessTable, { tableName = table }
     }
 }

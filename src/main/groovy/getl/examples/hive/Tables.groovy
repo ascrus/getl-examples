@@ -11,10 +11,12 @@ import groovy.transform.BaseScript
 // Load configuration file
 runGroovyClass getl.examples.utils.Config, true
 
+forGroup 'hive'
+
 // Hive database connection
-useHiveConnection hiveConnection('demo', true) {
+useHiveConnection hiveConnection('con', true) {
     // Use parameters from [connections.hive] section
-    config = 'hive'
+    useConfig 'hive'
     schemaName = 'getl_demo'
     sqlHistoryFile = "${configContent.workPath}/hive.{date}.sql"
 }

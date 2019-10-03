@@ -11,24 +11,29 @@ import groovy.transform.BaseScript
 @BaseScript Getl main
 
 // Define H2 tables
-runGroovyClass getl.examples.h2.Tables
+runGroovyClass getl.examples.h2.Tables, true
 
 // Count sale rows
 def count_sale_rows = configContent.countSales
 
+// Use a filter when processing a list of objects
+forGroup 'samples'
+
 // Create tables
-processDatasets(EMBEDDEDTABLE) {
-    def table = embeddedTable(it)
-    logInfo "Create H2 table $table"
-    table.create()
+profile("Create h2 tables") {
+    processDatasets { name ->
+        embeddedTable(name) {
+            create()
+            logInfo "Created sample table $it"
+        }
+    }
 }
 
 // Price table
-embeddedTable('prices') { table ->
-    logFine"Generating data to h2 table $table ..."
-    rowsTo(table) {
+embeddedTable('prices') {
+    rowsTo {
         // User code
-        process { add -> // writer object
+        writeRow { add -> // writer object
             add id: 1, name: 'Apple', create_date: DateUtils.now, price: 60.50, description: 'Not a macintosh.\nThis is fruit.'
             add id: 2, name: 'Pear', create_date: DateUtils.now, price: 90.00, description: null
             add id: 3, name: 'Plum', create_date: DateUtils.now, price: 110.00, description: 'Not a Green Plum.\nThis is fruit.'
@@ -37,40 +42,48 @@ embeddedTable('prices') { table ->
             add id: 6, name: 'Blackberry', create_date: DateUtils.now, price: 70.90, description: 'Not a phone.\nThis is fruit.'
             add id: 7, name: 'Blueberries', create_date: DateUtils.now, price: 85.00, description: null
         }
-        done {
-            logInfo"$countRow rows saved to h2 table $table"
+
+        testCase {
+            assertEquals(7, countRow)
         }
     }
+
+    logInfo "$updateRows price writen"
 }
 
 // Load customers data from generated XML file
-runGroovyClass getl.examples.xml.XMLCustomers
+runGroovyClass getl.examples.xml.XMLCustomers, true
+
+def countCustomers = configContent.countCustomers
+def countCustomerPhones = configContent.countCustomerPhones
 
 // Copy customers rows from xml file to h2 tables customers and customers_phones
-copyRows(xml('customers'), embeddedTable('customers')) {
-    bulkLoad = true
-
+copyRows(xml('xml:customers'), embeddedTable('customers')) {
     // Adding an write to the child table customers_phones
-    childs('customers.phones', embeddedTable('customers.phones')) {
+    childs('phones', embeddedTable('customers.phones')) {
         // Processing the child structure phones
-        processRow { addPhone, row ->
+        writeRow { addPhone, row ->
             // Copying phones array to the writer in h2 table phones customers
             row.phones?.each { phone ->
                 addPhone customer_id: row.id, phone: phone?.text()
             }
         }
-        childDone { logInfo "${dataset.updateRows} customer phones loaded" }
     }
-    doneFlow { logInfo "${destination.updateRows} customers loaded" }
+
+    copyRow()
+
+    testCase {
+        assertEquals(countCustomers, destination.updateRows)
+        assertEquals(countCustomerPhones, childs('phones').updateRows)
+    }
+
+    logInfo "${destination.updateRows} customers writen"
+    logInfo "${childs('phones').updateRows} customer phones writen"
 }
 
-assert embeddedTable('customers').countRow() == 3
-assert embeddedTable('customers.phones').countRow() == 7
-
 // Sales table
-embeddedTable('sales') { table ->
-    logFine"Generating data to h2 table $table ..."
-    rowsTo(table) {
+embeddedTable('sales') {
+    rowsTo {
         // Lookup price map structure
         def priceLookup = embeddedTable('prices').lookup { key = 'id'; strategy = ORDER_STRATEGY }
 
@@ -78,7 +91,7 @@ embeddedTable('sales') { table ->
         destParams.batchSize = 10000
 
         // User code
-        process { add -> // writer object
+        writeRow { add -> // writer object
             def num = 0
             (1..count_sale_rows).each { id ->
                 num++
@@ -95,8 +108,7 @@ embeddedTable('sales') { table ->
                         description: desc
             }
         }
-        done {
-            logInfo"$countRow rows saved to h2 table $table"
-        }
     }
+
+    logInfo "$updateRows sales writen"
 }

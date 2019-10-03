@@ -3,6 +3,8 @@
  */
 package getl.examples.hive
 
+import getl.examples.patterns.FillingTablesWithSampleData
+import getl.examples.patterns.InitTables
 import getl.lang.Getl
 import groovy.transform.BaseScript
 
@@ -16,50 +18,14 @@ runGroovyClass getl.examples.hive.Tables, true
 
 profile("Create Hive objects") {
     // Run sql script for create schemata and tables
-    sql {
+    sql(hiveConnection('hive:con')) {
         exec 'CREATE SCHEMA IF NOT EXISTS getl_demo;'
         logInfo'Created schema getl_demo.'
     }
-
-    // Create or truncate tables
-    processDatasets(HIVETABLE) { tableName ->
-        hiveTable(tableName) { table ->
-            if (!table.exists) {
-                // Create table in database
-                create ifNotExists: true
-                logInfo "Created table $tableName."
-            }
-            else {
-                truncate()
-                logInfo "Truncated table $tableName."
-            }
-        }
-    }
 }
 
-thread {
-    run(listDatasets(HIVETABLE)) { tableName ->
-        // Copy rows from the embedded table to the Hive table
-        copyRows(embeddedTable(tableName), hiveTable(tableName)) {
-            bulkLoad = true
-            done { logInfo "Copied $countRow rows of $tableName from the embedded table to the Hive table" }
-        }
-    }
-}
+// Create Hive tables
+runGroovyClass InitTables, { groupName = 'hive' }
 
-thread {
-    addThread {
-        assert hiveTable('prices').countRow() == 7
-    }
-    addThread {
-        assert hiveTable('customers').countRow() == 3
-    }
-    addThread {
-        assert hiveTable('customers.phones').countRow() == 7
-    }
-    addThread {
-        assert hiveTable('sales').countRow() == configContent.countSales
-    }
-
-    exec()
-}
+// Filling data to Hive tables
+runGroovyClass FillingTablesWithSampleData, { sourceGroup = 'samples'; destGroup = 'hive' }

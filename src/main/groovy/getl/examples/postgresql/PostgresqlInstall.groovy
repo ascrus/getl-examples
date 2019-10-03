@@ -3,6 +3,8 @@
  */
 package getl.examples.postgresql
 
+import getl.examples.patterns.FillingTablesWithSampleData
+import getl.examples.patterns.InitTables
 import getl.lang.Getl
 import groovy.transform.BaseScript
 
@@ -16,48 +18,25 @@ runGroovyClass getl.examples.postgresql.Tables, true
 
 profile("Create PostgreSQL objects") {
     // Run sql script for create schemata and tables
-    sql {
+    sql(postgresqlConnection('postgresql:con')) {
         exec 'CREATE SCHEMA IF NOT EXISTS getl_demo;'
         logInfo'Created schema getl_demo.'
     }
 
-    processDatasets(POSTGRESQLTABLE) { tableName ->
-        postgresqlTable(tableName) { table ->
-            if (!table.exists) {
-                // Create table in database
-                create ifNotExists: true
-                logInfo "Created table $tableName."
-            }
-            else {
-                truncate()
-                logInfo "Truncated table $tableName."
-            }
+    // Create history table
+    historypoint('postgresql:history') {
+        if (!exists) {
+            create(true)
+            logInfo "Created history point table $it"
+        } else {
+            truncate()
+            logInfo "Truncated history point table $it"
         }
     }
 }
 
-thread {
-    run(listDatasets(POSTGRESQLTABLE)) { tableName ->
-        // Copy rows from the embedded table to the PostgreSQL table
-        copyRows(embeddedTable(tableName), postgresqlTable(tableName)) {
-            done { logInfo "Copied $countRow rows of $tableName from the embedded table to the PostgreSQL table" }
-        }
-    }
-}
+// Create PostgreSql tables
+runGroovyClass InitTables, { groupName = 'postgresql' }
 
-thread {
-    addThread {
-        assert postgresqlTable('prices').countRow() == 7
-    }
-    addThread {
-        assert postgresqlTable('customers').countRow() == 3
-    }
-    addThread {
-        assert postgresqlTable('customers.phones').countRow() == 7
-    }
-    addThread {
-        assert postgresqlTable('sales').countRow() == configContent.countSales
-    }
-
-    exec()
-}
+// Filling data to PostgreSql tables
+runGroovyClass FillingTablesWithSampleData, { sourceGroup = 'samples'; destGroup = 'postgresql' }

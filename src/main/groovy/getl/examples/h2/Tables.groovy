@@ -11,6 +11,8 @@ import groovy.transform.BaseScript
 // Load configuration file
 runGroovyClass getl.examples.utils.Config, true
 
+forGroup 'samples'
+
 // Price table
 embeddedTable('prices', true) {
     tableName = 'prices'

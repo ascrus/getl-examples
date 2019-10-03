@@ -15,12 +15,12 @@ runGroovyClass getl.examples.utils.Config, true
 // Mail commands
 mail {
     // Use parameters from emailers.mail configurarion section
-    config = 'mail'
+    useConfig 'mail'
 
     subject = 'Test mail send'
     isHtml = true
     message = '<HTML><BODY><H1>Message</H1>This is test send from getl lang</BODY></HTML>'
-    attachment = FileUtils.FileFromResources('/files/dir1/file1.txt')
+    attachment = FileUtils.FileFromResources('/files/file.txt')
 
     send()
 

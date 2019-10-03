@@ -3,6 +3,8 @@
  */
 package getl.examples.mssql
 
+import getl.examples.patterns.FillingTablesWithSampleData
+import getl.examples.patterns.InitTables
 import getl.lang.Getl
 
 @BaseScript Getl main
@@ -17,7 +19,7 @@ runGroovyClass getl.examples.mssql.Tables, true
 
 profile("Create MSSQL objects") {
     // Run sql script for create schemata and tables
-    sql {
+    sql(mssqlConnection('mssql:con')) {
         exec false,  """
 IF schema_id('getl_demo') IS NULL
 BEGIN 
@@ -27,43 +29,19 @@ END"""
         logInfo'Created schema getl_demo.'
     }
 
-    processDatasets(MSSQLTABLE) { tableName ->
-        mssqlTable(tableName) { table ->
-            if (!table.exists) {
-                // Create table in database
-                create()
-                logInfo "Created table $tableName."
-            }
-            else {
-                truncate()
-                logInfo "Truncated table $tableName."
-            }
+    historypoint('mssql:history') {
+        if (!exists) {
+            create(true)
+            logInfo "Created history point table $it"
+        } else {
+            truncate()
+            logInfo "Truncated history point table $it"
         }
     }
 }
 
-thread {
-    run(listDatasets(MSSQLTABLE)) { tableName ->
-        // Copy rows from the embedded table to the Oracle table
-        copyRows(embeddedTable(tableName), mssqlTable(tableName)) {
-            done { logInfo "Copied $countRow rows of $tableName from the embedded table to the MSSQL table" }
-        }
-    }
-}
+// Create MSSQL tables
+runGroovyClass InitTables, { groupName = 'mssql' }
 
-thread {
-    addThread {
-        assert mssqlTable('prices').countRow() == 7
-    }
-    addThread {
-        assert mssqlTable('customers').countRow() == 3
-    }
-    addThread {
-        assert mssqlTable('customers.phones').countRow() == 7
-    }
-    addThread {
-        assert mssqlTable('sales').countRow() == configContent.countSales
-    }
-
-    exec()
-}
+// Filling data to MSSQL tables
+runGroovyClass FillingTablesWithSampleData, { sourceGroup = 'samples'; destGroup = 'mssql' }

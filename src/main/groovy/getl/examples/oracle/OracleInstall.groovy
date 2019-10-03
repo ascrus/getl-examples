@@ -3,6 +3,8 @@
  */
 package getl.examples.oracle
 
+import getl.examples.patterns.FillingTablesWithSampleData
+import getl.examples.patterns.InitTables
 import getl.lang.Getl
 import groovy.transform.BaseScript
 
@@ -15,43 +17,19 @@ runGroovyClass getl.examples.h2.H2Init, true
 runGroovyClass getl.examples.oracle.Tables, true
 
 profile("Create Oracle objects") {
-    processDatasets(ORACLETABLE) { tableName ->
-        oracleTable(tableName) { table ->
-            if (!table.exists) {
-                // Create table in database
-                create()
-                logInfo "Created table $tableName."
-            }
-            else {
-                truncate()
-                logInfo "Truncated table $tableName."
-            }
+    historypoint('oracle:history') {
+        if (!exists) {
+            create(true)
+            logInfo "Created history point table $it"
+        } else {
+            truncate()
+            logInfo "Truncated history point table $it"
         }
     }
 }
 
-thread {
-    run(listDatasets(ORACLETABLE)) { tableName ->
-        // Copy rows from the embedded table to the Oracle table
-        copyRows(embeddedTable(tableName), oracleTable(tableName)) {
-            done { logInfo "Copied $countRow rows of $tableName from the embedded table to the Oracle table" }
-        }
-    }
-}
+// Create Oracle tables
+runGroovyClass InitTables, { groupName = 'oracle' }
 
-thread {
-    addThread {
-        assert oracleTable('prices').countRow() == 7
-    }
-    addThread {
-        assert oracleTable('customers').countRow() == 3
-    }
-    addThread {
-        assert oracleTable('customers.phones').countRow() == 7
-    }
-    addThread {
-        assert oracleTable('sales').countRow() == configContent.countSales
-    }
-
-    exec()
-}
+// Filling data to Oracle tables
+runGroovyClass FillingTablesWithSampleData, { sourceGroup = 'samples'; destGroup = 'oracle' }

@@ -1,5 +1,6 @@
 package getl.examples.vertica
 
+import getl.examples.csv.CsvFiles
 import groovy.transform.BaseScript
 
 @BaseScript getl.lang.Getl getl
@@ -7,7 +8,7 @@ import groovy.transform.BaseScript
 // Define Vertica tables
 runGroovyClass getl.examples.vertica.Tables, true
 // Define Csv files
-runGroovyClass getl.examples.vertica.CsvFiles, true
+runGroovyClass CsvFiles, true
 
 files {
     rootPath = csvConnection('demo').path

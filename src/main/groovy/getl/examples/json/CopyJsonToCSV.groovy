@@ -9,7 +9,7 @@ import groovy.transform.BaseScript
 @BaseScript Getl main
 
 // Define json file
-json('customers', true) { json ->
+json('json:customers', true) {
     rootNode = 'customers'
 
     field('id') { type = integerFieldType }
@@ -18,11 +18,11 @@ json('customers', true) { json ->
 
 
     // Write json text to temporary file
-    textFile { file ->
+    fileName = textFile { file ->
         // This file will be storage in temp directory and have randomize file name.
         temporaryFile = true
         // Append text to buffer
-        text '''
+        write '''
 {
     "customers": [
         {
@@ -55,51 +55,50 @@ json('customers', true) { json ->
     ]
 }
 '''
-        // Write buffer to file
-        write()
-
-        // Set file name to json
-        json.fileName = fileName
     }
 }
 
 // Define csv temporary file for customers data
-csvTemp('customers', true) {
+csvTempWithDataset('#customers', json('json:customers')) {
     // Used the json fields minus the array phones
-    field = json('customers').field
     removeField'phones'
 }
 
 // Define csv temporary file for customers phones data
-csvTemp('customers.phones', true) {
+csvTemp('#phones', true) {
     // Adding the customer identification field and him phone
     field('customer_id') { type = integerFieldType }
     field('phone')
 }
 
 // Generate writer the phones customers to temporary file
-copyRows(json('customers'), csvTemp('customers')) {
+copyRows(json('json:customers'), csvTemp('#customers')) {
     // Adding an write to the child table customers_phones
-    childs('customers.phones', csvTemp('customers.phones')) {
+    childs('phones', csvTemp('#phones')) {
         // Processing the child structure phones
-        processRow { addPhone, row ->
+        writeRow { addPhone, row ->
             // Copying phones array to the writer in h2 table phones customers
-            row.phones?.each { phone ->
+            (row.phones as List<Map>)?.each { phone ->
                 addPhone customer_id: row.id, phone: phone.phone
             }
         }
-        childDone { logInfo "${dataset.updateRows} customer phones loaded" }
+
     }
 
-    doneFlow { logInfo "${destination.updateRows} customers loaded" }
+    copyRow()
+
+    logInfo "${destination.updateRows} customers loaded"
+    logInfo "${childs('phones').updateRows} customer phones loaded"
 }
 
 println 'Customers:'
-rowProcess(csvTemp('customers')) {
-    process { println it}
+rowProcess(csvTemp('#customers')) {
+    readRow { println it }
 }
 
 println 'Customers phones:'
-rowProcess(csvTemp('customers.phones')) {
-    process { println it }
+rowProcess(csvTemp('#phones')) {
+    readRow { println it }
 }
+
+unregisterDataset'#*'
