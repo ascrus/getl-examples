@@ -26,3 +26,6 @@ out/
 
 ### Config files for test modules
 config/
+
+# Gradle wrapper batch file
+gradlew
