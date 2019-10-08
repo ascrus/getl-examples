@@ -11,7 +11,7 @@ import groovy.transform.Field
 forGroup groupName
 
 profile("Create database object with \"$filteringGroup\" group") {
-    jdbcTableProcess { tableName ->
+    processJdbcTables { tableName ->
         jdbcTable(tableName) {
             if (!exists) {
                 // Create table in database

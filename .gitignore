@@ -2,6 +2,8 @@
 .DS_Store
 
 ### Gradle template
+gradlew
+gradlew.bat
 .gradle
 build/
 
@@ -27,5 +29,3 @@ out/
 ### Config files for test modules
 config/
 
-# Gradle wrapper batch file
-gradlew
