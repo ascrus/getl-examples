@@ -10,7 +10,6 @@ version '4.0.4'
 repositories {
     mavenLocal()
     mavenCentral()
-    maven { url 'http://easydata.ru/maven/' }
 }
 
 dependencies {
