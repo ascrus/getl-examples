@@ -36,7 +36,7 @@ profile("Create PostgreSQL objects") {
 }
 
 // Create PostgreSql tables
-runGroovyClass InitTables, { groupName = 'postgresql' }
+runGroovyClass InitTables, { groupName = 'postgresql'; recreateTables = false }
 
 // Filling data to PostgreSql tables
 runGroovyClass FillingTablesWithSampleData, { sourceGroup = 'samples'; destGroup = 'postgresql' }

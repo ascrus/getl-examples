@@ -27,7 +27,7 @@ useCsvConnection csvConnection('con', true) {
     autoSchema = true // create schema files for csv files
 }
 
-processDatasets(sourceGroup + ':*', listJdbcTableClasses) { tableName -> // Process source table
+processDatasets(sourceGroup + ':*', LISTJDBCTABLECLASSES) { tableName -> // Process source table
     def csvName = parseName(tableName).objectName
     csvWithDataset(csvName, dataset(tableName), true) { // Define Csv dataset for default connection on source table base
         fileName = csvName

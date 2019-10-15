@@ -33,6 +33,7 @@ mysqlTable('prices', true) {
     field('name') { type = stringFieldType; isNull = false; length = 50 }
     field('create_date') { type = datetimeFieldType; isNull = false }
     field('price') { type = numericFieldType; isNull = false; length = 9; precision = 2 }
+    field('is_active') { type = booleanFieldType; isNull = false }
     field('description') { type = textFieldType }
 }
 

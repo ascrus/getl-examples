@@ -29,7 +29,7 @@ profile("Create Oracle objects") {
 }
 
 // Create Oracle tables
-runGroovyClass InitTables, { groupName = 'oracle' }
+runGroovyClass InitTables, { groupName = 'oracle'; recreateTables = false }
 
 // Filling data to Oracle tables
 runGroovyClass FillingTablesWithSampleData, { sourceGroup = 'samples'; destGroup = 'oracle' }

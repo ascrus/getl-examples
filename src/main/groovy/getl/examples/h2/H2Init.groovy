@@ -34,13 +34,13 @@ embeddedTable('prices') {
     rowsTo {
         // User code
         writeRow { add -> // writer object
-            add id: 1, name: 'Apple', create_date: DateUtils.now, price: 60.50, description: 'Not a macintosh.\nThis is fruit.'
-            add id: 2, name: 'Pear', create_date: DateUtils.now, price: 90.00, description: null
-            add id: 3, name: 'Plum', create_date: DateUtils.now, price: 110.00, description: 'Not a Green Plum.\nThis is fruit.'
-            add id: 4, name: 'Cherries', create_date: DateUtils.now, price: 150.10, description: 'Not a china machine.\nThis is fruit.'
-            add id: 5, name: 'Melon', create_date: DateUtils.now, price: 30.00, description: null
-            add id: 6, name: 'Blackberry', create_date: DateUtils.now, price: 70.90, description: 'Not a phone.\nThis is fruit.'
-            add id: 7, name: 'Blueberries', create_date: DateUtils.now, price: 85.00, description: null
+            add id: 1, name: 'Apple', create_date: DateUtils.now, price: 60.50, is_active: true, description: 'Not a macintosh.\nThis is fruit.'
+            add id: 2, name: 'Pear', create_date: DateUtils.now, price: 90.00, is_active: true, description: null
+            add id: 3, name: 'Plum', create_date: DateUtils.now, price: 110.00, is_active: true, description: 'Not a Green Plum.\nThis is fruit.'
+            add id: 4, name: 'Cherries', create_date: DateUtils.now, price: 150.10, is_active: true, description: 'Not a china machine.\nThis is fruit.'
+            add id: 5, name: 'Melon', create_date: DateUtils.now, price: 30.00, is_active: true, description: null
+            add id: 6, name: 'Blackberry', create_date: DateUtils.now, price: 70.90, is_active: true, description: 'Not a phone.\nThis is fruit.'
+            add id: 7, name: 'Blueberries', create_date: DateUtils.now, price: 85.00, is_active: true, description: null
         }
 
         testCase {

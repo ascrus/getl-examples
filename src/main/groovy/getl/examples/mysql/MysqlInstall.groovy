@@ -35,7 +35,7 @@ profile("Create MySQL objects") {
 }
 
 // Create MySQL tables
-runGroovyClass InitTables, { groupName = 'mysql' }
+runGroovyClass InitTables, { groupName = 'mysql'; recreateTables = false }
 
 // Filling data to MySQL tables
 runGroovyClass FillingTablesWithSampleData, { sourceGroup = 'samples'; destGroup = 'mysql' }

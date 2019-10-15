@@ -41,7 +41,7 @@ END"""
 }
 
 // Create MSSQL tables
-runGroovyClass InitTables, { groupName = 'mssql' }
+runGroovyClass InitTables, { groupName = 'mssql'; recreateTables = false }
 
 // Filling data to MSSQL tables
 runGroovyClass FillingTablesWithSampleData, { sourceGroup = 'samples'; destGroup = 'mssql' }

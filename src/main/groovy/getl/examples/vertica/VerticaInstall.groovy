@@ -35,7 +35,7 @@ profile("Create Vertica schema") {
 }
 
 // Create Vertica tables
-runGroovyClass InitTables, { groupName = 'vertica' }
+runGroovyClass InitTables, { groupName = 'vertica'; recreateTables = false }
 
 // Filling data to Vertica tables
 runGroovyClass FillingTablesWithSampleData, { sourceGroup = 'samples'; destGroup = 'vertica' }
