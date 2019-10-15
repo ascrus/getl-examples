@@ -4,6 +4,6 @@ import getl.lang.Getl
 
 class Runner {
     static void main(def args) {
-        Getl.main(args)
+        Getl.Main(args)
     }
 }

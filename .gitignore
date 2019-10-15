@@ -15,7 +15,7 @@ gradle/
 *.iml
 
 ## Directory-based project format:
-.idea/
+#.idea/
 
 # IntelliJ
 out/
