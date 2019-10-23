@@ -1,9 +1,11 @@
 # Default ignored files
-/workspace.xml
 /$*
+/workspace.xml
 /gradle.xml
-/misc.xml
 /uiDesigner.xml
-/compiler.xml
-/.name
+/misc.xml
 /vcs.xml
+/compiler.xml
+/modules.xml
+/libraries
+/modules
