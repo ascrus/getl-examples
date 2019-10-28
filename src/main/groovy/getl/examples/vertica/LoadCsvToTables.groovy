@@ -8,9 +8,21 @@ import groovy.transform.BaseScript
 // Define Vertica tables
 runGroovyClass getl.examples.vertica.Tables, true
 // Define Csv files
-runGroovyClass CsvFiles, true
+runGroovyClass CsvFiles, true, { sourceGroup = 'vertica'; packToGz = true }
 
-files {
-    rootPath = csvConnection('demo').path
-    registerDataset buildListFiles('{table}.csv.gz'), 'csv_files'
+thread {
+    useList listJdbcTables('vertica:*')
+    run(3) { tableName ->
+        def objectName = parseName(tableName).objectName
+        verticaTable(tableName) {
+            truncate()
+
+            bulkLoadCsv(csv("csv:$objectName")) {
+                inheritFields = true
+                if (objectName == 'sales') {
+                    files = this.csvConnection('csv:con').path + '/vertica.' + objectName + '.{month}.csv.gz'
+                }
+            }
+        }
+    }
 }

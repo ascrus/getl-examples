@@ -16,7 +16,7 @@ import groovy.transform.Field
 forGroup 'csv'
 
 // Connection for Csv files
-useCsvConnection csvConnection('con', true) {
+useCsvConnection csvConnection('csv:con', true) {
     fieldDelimiter = '\t' // field delimiter char
     escaped = true // used escape coding for " and \n characters
     codePage = 'UTF-8' // write as utf-8 code page
