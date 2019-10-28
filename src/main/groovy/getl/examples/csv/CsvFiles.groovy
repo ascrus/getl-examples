@@ -29,7 +29,7 @@ useCsvConnection csvConnection('csv:con', true) {
 
 processDatasets(sourceGroup + ':*', LISTJDBCTABLECLASSES) { tableName -> // Process source table
     def csvName = parseName(tableName).objectName
-    csvWithDataset(csvName, dataset(tableName), true) { // Define Csv dataset for default connection on source table base
-        fileName = csvName
+    csvWithDataset("csv:$csvName", dataset(tableName), true) { // Define Csv dataset for default connection on source table base
+        fileName = sourceGroup + '.' + csvName
     }
 }

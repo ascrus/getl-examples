@@ -23,10 +23,6 @@ runGroovyClass CsvFiles, true, { sourceGroup = this.sourceGroup; packToGz = this
 thread {
     useList linkDatasets(sourceGroup, 'csv') { it != 'sales' }
     runWithElements {
-        def file = csv(it.destination) { // Modify file definition (set file name)
-            fileName = sourceGroup + '.' + fileName
-        }
-
         copyRows(jdbcTable(it.source), csv(it.destination)) {
             copyRow()
             logInfo "$countRow rows copy from $source to $destination"
@@ -49,7 +45,7 @@ thread {
             queryParams.month = DateUtils.FormatDate('yyyy-MM-dd', sale_day.month)
         }
         def file = csv('csv:sales') { // Modify sales file definition (set file name)
-            fileName = sourceGroup + '.' + fileName + '.' + DateUtils.FormatDate('yyyyMMdd', sale_day.month)
+            fileName = fileName + '.' + DateUtils.FormatDate('yyyyMMdd', sale_day.month)
         }
 
         copyRows(sales, file) { // Copy rows from one month partition to one csv file

@@ -12,7 +12,7 @@ runGroovyClass CsvFiles, true, { sourceGroup = 'vertica'; packToGz = true }
 
 thread {
     useList listJdbcTables('vertica:*')
-    run(3) { tableName ->
+    run(1) { tableName ->
         def objectName = parseName(tableName).objectName
         verticaTable(tableName) {
             truncate()
@@ -20,7 +20,7 @@ thread {
             bulkLoadCsv(csv("csv:$objectName")) {
                 inheritFields = true
                 if (objectName == 'sales') {
-                    files = this.csvConnection('csv:con').path + '/vertica.' + objectName + '.{month}.csv.gz'
+                    files = 'vertica.sales.{month}.csv.gz'
                 }
             }
         }
