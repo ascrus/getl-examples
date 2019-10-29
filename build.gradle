@@ -6,19 +6,9 @@ plugins {
 }
 
 group 'net.sourceforge.getl'
-version '4.0.6-SNAPSHOT'
-
-/*
-configurations.all {
-    resolutionStrategy.cacheDynamicVersionsFor 1, 'hours'
-    resolutionStrategy.cacheChangingModulesFor 1, 'hours'
-}
-*/
+version '4.0.6'
 
 repositories {
-    maven {
-        url 'http://easydata.ru:8081/repository/maven-snapshots/'
-    }
     mavenCentral()
 }
 
