@@ -30,7 +30,7 @@ excel {
     assert field('c').type == Field.stringFieldType
 }
 
-rowProcess(csvTemp('#excel.data')) {
+rowsProcess(csvTemp('#excel.data')) {
     readRow { logInfo(it) }
     logInfo "$countRow rows from excel read"
 }

@@ -76,7 +76,7 @@ files {
 }
 
 logInfo 'History rows: '
-rowProcess(history) {
+rowsProcess(history) {
     readRow { logInfo it }
 }
 

@@ -50,7 +50,7 @@ testCase {
 logInfo "Detected ${files.collect { File f -> f.name + '(' + f.size() + ' bytes)' }} files"
 
 // Read split data files
-rowProcess(salesFile) {
+rowsProcess(salesFile) {
     readRow { row ->
         testCase {
             assertTrue(row.price_id in (1..7))

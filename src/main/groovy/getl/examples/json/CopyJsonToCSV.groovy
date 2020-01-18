@@ -92,12 +92,12 @@ copyRows(json('json:customers'), csvTemp('#customers')) {
 }
 
 println 'Customers:'
-rowProcess(csvTemp('#customers')) {
+rowsProcess(csvTemp('#customers')) {
     readRow { println it }
 }
 
 println 'Customers phones:'
-rowProcess(csvTemp('#phones')) {
+rowsProcess(csvTemp('#phones')) {
     readRow { println it }
 }
 
