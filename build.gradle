@@ -6,9 +6,17 @@ plugins {
 }
 
 group 'net.sourceforge.getl'
-version '4.0.9'
+version '4.2.5-4-SNAPSHOT'
 
 repositories {
+    mavenLocal()
+    maven {
+        url 'http://easydata.ru:8081/repository/maven-snapshots/'
+
+    }
+    maven {
+        url 'http://easydata.ru:8081/repository/maven-releases/'
+    }
     mavenCentral()
 }
 
