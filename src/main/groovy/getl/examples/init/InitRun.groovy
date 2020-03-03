@@ -1,6 +1,7 @@
 package getl.examples.init
 
-import getl.examples.repository.Tables
+import getl.examples.env.InitProcess
+import getl.examples.repository.Db
 import getl.lang.Getl
 import getl.utils.FileUtils
 
@@ -13,26 +14,13 @@ class InitRun extends Getl {
 
     @Override
     Object run() {
-        Getl.Dsl {
-            options {
-                processTimeLevelLog = Level.FINER
-                processTimeDebug = false
-                processTimeTracing = true
-                sqlEchoLogLevel = Level.INFO
-            }
+        // Init options
+        InitProcess.InitOptions(this)
 
-            logging {
-                logFileName = "${FileUtils.SystemTempDir()}/getl_examples.{date}.log"
-            }
+        // Creating a structure in the database
+        runGroovyClass CreateDBObjects
 
-            // Load repository database objects
-            runGroovyClass Tables, true
-
-            // Creating a structure in the database
-            runGroovyClass CreateDBObjects
-
-            // Generate data for database tables
-            runGroovyClass GenerateData
-        }
+        // Generate data for database tables
+        runGroovyClass GenerateData
     }
 }

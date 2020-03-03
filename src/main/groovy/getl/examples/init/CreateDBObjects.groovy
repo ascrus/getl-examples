@@ -1,9 +1,13 @@
 package getl.examples.init
 
+import getl.examples.repository.Db
 import getl.lang.Getl
 import groovy.transform.BaseScript
 
 @BaseScript Getl main
+
+// Load repository database objects
+runGroovyClass Db, true
 
 // Set default work with objects of group "db"
 forGroup 'db'
@@ -52,6 +56,12 @@ h2Table('customers.phones') {
     create()
 }
 
+sequence('sales') { seq ->
+    sql(seq.currentJDBCConnection) {
+        exec "CREATE SEQUENCE ${seq.fullName} INCREMENT BY ${seq.cache} CACHE ${seq.cache} NO CYCLE"
+    }
+}
+
 // Define the structure and create table "Sales"
 h2Table('sales') {
     field('id') { type = bigintFieldType; isKey = true }
@@ -63,5 +73,18 @@ h2Table('sales') {
     field('description') { type = stringFieldType; length = 50 }
     create()
 }
+
+// Define the structure and create table "Events"
+h2Table('events') {
+    field('id') { type = stringFieldType; length = 50; isKey = true }
+    field('event_time') { type = datetimeFieldType; isNull = false }
+    field('event_type') { type = stringFieldType; length = 20; isNull = false }
+    field('counter_id') { type = integerFieldType; isNull = false }
+    field('counter_value') { type = bigintFieldType; isNull = false }
+    create()
+}
+
+// Create history points s_Points table
+historypoint('points') { create() }
 
 logInfo 'All database objects are successfully created!'

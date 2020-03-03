@@ -1,5 +1,6 @@
 package getl.examples.init
 
+import getl.examples.repository.Db
 import getl.examples.repository.Xml
 import getl.lang.Getl
 import getl.utils.DateUtils
@@ -12,8 +13,9 @@ import groovy.transform.BaseScript
 final def countCustomers = 3
 // Count of customer phones
 final def countCustomerPhones = 7
-// Count of sale
-final def count_sale_rows = 100000
+
+// Load repository database objects
+runGroovyClass Db, true
 
 // Set default work with objects of group "db"
 forGroup 'db'
@@ -75,39 +77,6 @@ copyRows(xml('xml:customers'), h2Table('customers')) {
 
     logInfo "${destination.updateRows} rows are inserted in table \"Customers\""
     logInfo "${childs('phones').updateRows} rows are inserted in table \"Customers_Phones\""
-}
-
-// Work with table "Sales"
-h2Table('sales') {
-    // Generate and write data to the sales table
-    rowsTo {
-        // Lookup price map structure
-        def priceLookup = h2Table('prices').lookup { key = 'id'; strategy = ORDER_STRATEGY }
-
-        // Size of batch saving rows
-        destParams.batchSize = 10000
-
-        // Code for inserting records into a table
-        writeRow { add -> // Write descriptor
-            def num = 0
-            (1..count_sale_rows).each { id ->
-                num++
-                def price = GenerationUtils.GenerateInt(1, 7)
-                def customer = GenerationUtils.GenerateInt(1, 3)
-                def sale_date = GenerationUtils.GenerateDate(90)
-                def count = GenerationUtils.GenerateInt(1, 99)
-                def priceRow = priceLookup.get(price) as Map
-                def sum = priceRow.price * count
-                def desc = GenerationUtils.GenerateString(50)
-
-                // Append row to destination
-                add id: num, price_id: price, customer_id: customer, sale_date: sale_date, sale_count: count, sale_sum: sum,
-                        description: desc
-            }
-        }
-    }
-
-    logInfo "$updateRows rows are inserted in table \"Sales\""
 }
 
 logInfo 'All database objects are successfully filled with data!'

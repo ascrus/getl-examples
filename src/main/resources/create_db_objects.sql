@@ -6,7 +6,7 @@ IF (NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.USERS WHERE Lower(name) = 'reade
 END IF;
 
 IF (NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.USERS WHERE Lower(name) = 'writer'));
-    CREATE USER writer PASSWORD 'reader_password';
+    CREATE USER writer PASSWORD 'writer_password';
     ECHO User writer successfully created
 END IF;
 
