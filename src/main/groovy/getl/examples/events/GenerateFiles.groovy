@@ -64,11 +64,11 @@ thread {
 
         profile("Generate on $genStr date") {
             // Path for generate file
-            def genPath = jsonConnection('con').path + '/' + genStr
+            def genPath = "$jsonPath/$genStr"
             FileUtils.ValidPath(genPath)
 
             // Set path on generated date
-            jsonConnection('con').path = "$jsonPath/$genStr"
+            jsonConnection('con').path = "$genPath"
 
             // Generate events files
             (1..countGenerateFilesinDay).each { num ->
