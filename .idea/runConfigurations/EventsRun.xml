@@ -2,6 +2,7 @@
   <configuration default="false" name="EventsRun" type="Application" factoryName="Application" nameIsGenerated="true">
     <option name="MAIN_CLASS_NAME" value="getl.examples.events.EventsRun" />
     <module name="getl-examples.main" />
+    <option name="WORKING_DIRECTORY" value="$MODULE_WORKING_DIR$" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="getl.examples.events.*" />
