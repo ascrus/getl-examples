@@ -1,17 +1,18 @@
-package getl.examples.repository
+package getl.examples.data
 
-import getl.lang.Getl
+import getl.examples.launcher.ExampleRun
 import getl.utils.FileUtils
 import groovy.transform.BaseScript
 
-@BaseScript Getl main
+//noinspection GroovyUnusedAssignment
+@BaseScript ExampleRun main
 
 // Register Xml file "Customers" in the repository
 xml('xml:customers', true) { xml ->
     fileName = FileUtils.ResourceFileName('resource:/customers.xml')
 
     rootNode = 'customers.customer'
-    defaultAccessMethod = DEFAULT_NODE_ACCESS // Fields values are stored as node value
+    defaultAccessMethod = DEFAULT_NODE_ACCESS as Integer // Fields values are stored as node value
 
     attributeField('version') { alias = 'header.@version[0]' }
     attributeField('objecttype') { alias = 'header.@object[0]' }

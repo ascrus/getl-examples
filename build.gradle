@@ -2,27 +2,23 @@ plugins {
     id 'groovy'
     id 'idea'
     id 'maven'
-    id 'com.github.johnrengelman.shadow' version '5.1.0'
+//    id 'com.github.johnrengelman.shadow' version '5.1.0'
 }
 
 group 'net.sourceforge.getl'
-version '4.4.0-1-SNAPSHOT'
+version '4.4.0'
 
 repositories {
     mavenLocal()
-    maven {
-        url 'http://easydata.ru:8081/repository/maven-snapshots/'
-
-    }
     maven {
         url 'http://easydata.ru:8081/repository/maven-releases/'
     }
     mavenCentral()
 }
 
-shadowJar {
+/*shadowJar {
     zip64 true
-}
+}*/
 
 dependencies {
     compile(group: 'net.sourceforge.getl', name: 'getl', version:version) {
@@ -30,8 +26,5 @@ dependencies {
         exclude group: "org.apache.hadoop"
         exclude group: "com.force.api"
     }
-
-    compile fileTree(dir: 'jdbc')
-
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+//    compile fileTree(dir: 'jdbc')
 }

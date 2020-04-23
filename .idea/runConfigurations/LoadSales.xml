@@ -1,11 +1,11 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="InitRun" type="Application" factoryName="Application" nameIsGenerated="true">
-    <option name="MAIN_CLASS_NAME" value="getl.examples.init.InitRun" />
+  <configuration default="false" name="LoadSales" type="Application" factoryName="Application" nameIsGenerated="true">
+    <option name="MAIN_CLASS_NAME" value="getl.examples.app.LoadSales" />
     <module name="getl-examples.main" />
-    <option name="WORKING_DIRECTORY" value="$MODULE_WORKING_DIR$" />
+    <option name="WORKING_DIRECTORY" value="$ProjectFileDir$" />
     <extension name="coverage">
       <pattern>
-        <option name="PATTERN" value="getl.examples.init.*" />
+        <option name="PATTERN" value="getl.examples.app.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>

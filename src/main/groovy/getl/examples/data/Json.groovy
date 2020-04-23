@@ -1,18 +1,18 @@
-package getl.examples.repository
+package getl.examples.data
 
-import getl.examples.env.InitProcess
-import getl.lang.Getl
+import getl.examples.launcher.ExampleRun
 import getl.utils.FileUtils
 import groovy.transform.BaseScript
 
-@BaseScript Getl main
+//noinspection GroovyUnusedAssignment
+@BaseScript ExampleRun main
 
 forGroup 'json'
 
 // Register Json connection "Con"
 useJsonConnection jsonConnection('con', true) {
     extension = 'json'
-    path = "${InitProcess.WorkPath}/events"
+    path = "$WorkPath/events"
     FileUtils.ValidPath(path)
 }
 

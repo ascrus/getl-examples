@@ -1,13 +1,14 @@
-package getl.examples.init
+package getl.examples.process.init
 
-import getl.examples.repository.Db
-import getl.lang.Getl
+import getl.examples.data.Db
+import getl.examples.launcher.ExampleRun
 import groovy.transform.BaseScript
 
-@BaseScript Getl main
+//noinspection GroovyUnusedAssignment
+@BaseScript ExampleRun main
 
 // Load repository database objects
-runGroovyClass Db, true
+callScripts Db
 
 // Set default work with objects of group "db"
 forGroup 'db'
@@ -18,7 +19,7 @@ useH2Connection h2Connection('con') {
     useLogin 'dba'
 
     // Define a system table of H2 database users
-    def users = h2Table {
+    h2Table {
         schemaName = 'INFORMATION_SCHEMA'
         tableName = 'USERS'
     }

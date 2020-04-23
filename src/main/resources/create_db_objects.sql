@@ -1,3 +1,5 @@
+-- noinspection SyntaxErrorForFile
+
 DROP SCHEMA IF EXISTS demo CASCADE;
 
 IF (NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.USERS WHERE Lower(name) = 'reader'));

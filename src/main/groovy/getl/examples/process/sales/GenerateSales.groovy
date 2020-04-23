@@ -1,12 +1,13 @@
-package getl.examples.sales
+package getl.examples.process.sales
 
-import getl.examples.repository.Db
-import getl.lang.Getl
+import getl.examples.data.Db
+import getl.examples.launcher.ExampleRun
 import getl.utils.GenerationUtils
 import groovy.transform.BaseScript
 import groovy.transform.Field
 
-@BaseScript Getl main
+//noinspection GroovyUnusedAssignment
+@BaseScript ExampleRun main
 
 // Count rows to generate sales
 @Field Long count_generate_rows = 100000

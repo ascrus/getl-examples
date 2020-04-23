@@ -1,11 +1,11 @@
-package getl.examples.repository
+package getl.examples.data
 
-import getl.examples.env.InitProcess
-import getl.lang.Getl
+import getl.examples.launcher.ExampleRun
 import getl.utils.FileUtils
 import groovy.transform.BaseScript
 
-@BaseScript Getl main
+//noinspection GroovyUnusedAssignment
+@BaseScript ExampleRun main
 
 configuration {
     // Load the list of logins to the database from the configuration file in the resources
@@ -15,7 +15,7 @@ configuration {
 // Register a connection to H2 database in the repository and set it by default for H2 objects of this script
 useH2Connection h2Connection('db:con', true) {
     // Specify to place the database file in the pace of the OS directory (if it is not there, it will be created)
-    connectDatabase = "${InitProcess.WorkPath}/db"
+    connectDatabase = "$WorkPath/db"
     FileUtils.ValidFilePath(connectDatabase)
 
     // Specify the configuration section in which logins to the database are stored
@@ -25,7 +25,7 @@ useH2Connection h2Connection('db:con', true) {
     schemaName = 'demo'
 
     // Write sql command to log
-    sqlHistoryFile = "${InitProcess.WorkPath}/db.{date}.sql"
+    sqlHistoryFile = "$WorkPath/db.{date}.sql"
 }
 
 // Set default work with objects of group "db"

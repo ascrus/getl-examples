@@ -1,25 +1,21 @@
-package getl.examples.events
+package getl.examples.process.events
 
-import getl.examples.repository.Db
-import getl.examples.repository.Json
-import getl.lang.Getl
+import getl.examples.data.Db
+import getl.examples.data.Json
+import getl.examples.files.EventsStorage
+import getl.examples.launcher.ExampleRun
 import groovy.transform.BaseScript
 
-@BaseScript Getl main
+//noinspection GroovyUnusedAssignment
+@BaseScript ExampleRun main
 
-// Define database objects
-runGroovyClass Db, true
+// Define repository objects
+callScripts Db, Json, EventsStorage
+
 // Using writer login
 h2Connection('db:con') { useLogin 'writer' }
 
-// Define json objects
-runGroovyClass Json, true
-
-// Define source file managers
-files('#events', true) {
-    // Set the path to the source events file storage directory
-    rootPath = jsonConnection('json:con').path
-
+files('events') {
     // Save file processing history to table Events_History
     story = h2Table('db:events_history')
     // Create history table if not exist
@@ -27,7 +23,7 @@ files('#events', true) {
 }
 
 // Processing events files
-fileProcessing(files('#events')) {
+fileProcessing(files('events')) {
     // Remove processed file
     removeFiles = true
     // Remove empty directory after processing files
@@ -65,6 +61,10 @@ fileProcessing(files('#events')) {
     }
 }
 
-unregisterDataset('#*')
-
 logInfo "Loading event files completed successfully."
+
+// Runs after the script finishes.
+void done() {
+    // Turn off history
+    files('events') { story = null }
+}

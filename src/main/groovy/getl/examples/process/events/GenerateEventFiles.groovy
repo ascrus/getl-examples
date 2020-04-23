@@ -1,8 +1,8 @@
-package getl.examples.events
+package getl.examples.process.events
 
-import getl.examples.repository.Db
-import getl.examples.repository.Json
-import getl.lang.Getl
+import getl.examples.data.Db
+import getl.examples.data.Json
+import getl.examples.launcher.ExampleRun
 import getl.utils.DateUtils
 import getl.utils.FileUtils
 import getl.utils.GenerationUtils
@@ -12,7 +12,8 @@ import groovy.json.StreamingJsonBuilder
 import groovy.transform.BaseScript
 import groovy.transform.Field
 
-@BaseScript Getl main
+//noinspection GroovyUnusedAssignment
+@BaseScript ExampleRun main
 
 // Script parameters
 @Field countGenerateDays = 10
@@ -28,8 +29,9 @@ void check() {
     assert (countThreads?:0) > 0
 }
 
-// Define database objects
-runGroovyClass Db, true
+// Define repository objects
+callScripts Db, Json
+
 // Using writer login
 h2Connection('db:con') { useLogin 'writer' }
 
@@ -38,8 +40,6 @@ def lastDate = historypoint('db:points').lastValue('events').value as Date
 if (lastDate == null) lastDate = DateUtils.ParseDate('yyyy-MM-dd', '2009-12-31')
 logInfo "Generate events after ${DateUtils.FormatDate(lastDate)} ..."
 
-// Define json objects
-runGroovyClass Json, true
 // Filter by group "json"
 forGroup 'json'
 

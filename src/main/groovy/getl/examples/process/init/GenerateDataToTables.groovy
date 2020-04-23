@@ -1,13 +1,13 @@
-package getl.examples.init
+package getl.examples.process.init
 
-import getl.examples.repository.Db
-import getl.examples.repository.Xml
-import getl.lang.Getl
+import getl.examples.data.Db
+import getl.examples.data.Xml
+import getl.examples.launcher.ExampleRun
 import getl.utils.DateUtils
-import getl.utils.GenerationUtils
 import groovy.transform.BaseScript
 
-@BaseScript Getl main
+//noinspection GroovyUnusedAssignment
+@BaseScript ExampleRun main
 
 // Count customers
 final def countCustomers = 3
@@ -15,7 +15,7 @@ final def countCustomers = 3
 final def countCustomerPhones = 7
 
 // Load repository database objects
-runGroovyClass Db, true
+callScripts Db, Xml
 
 // Set default work with objects of group "db"
 forGroup 'db'
@@ -50,9 +50,6 @@ h2Table('prices') {
     logInfo "$updateRows rows are inserted in table \"Price\""
 }
 
-// Load repository Xml objects
-runGroovyClass Xml, true
-
 // Copy customer data from the Xml resource file "customers.xml" to tables "Customers" and "Customers_Phones"
 copyRows(xml('xml:customers'), h2Table('customers')) {
     // Adding an write to the child table "Customers_Phones"
@@ -61,6 +58,7 @@ copyRows(xml('xml:customers'), h2Table('customers')) {
         writeRow { addPhone, row ->
             // Copying phones array to the writer in h2 table phones customers
             row.phones?.each { phone ->
+                //noinspection GroovyAssignabilityCheck,GrUnresolvedAccess
                 addPhone customer_id: row.id, phone: phone?.text()
             }
         }
