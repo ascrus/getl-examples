@@ -17,7 +17,7 @@ void check() {
 }
 
 // Load repository database objects
-runGroovyClass Db, true
+callScripts Db
 
 forGroup 'db'
 

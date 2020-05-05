@@ -1,6 +1,5 @@
 package getl.examples.files
 
-import getl.examples.data.Db
 import getl.examples.data.Json
 import getl.examples.launcher.ExampleRun
 import groovy.transform.BaseScript

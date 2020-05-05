@@ -5,6 +5,7 @@ import getl.examples.files.EventsStorage
 import getl.examples.launcher.ExampleRun
 import getl.examples.launcher.ExampleTest
 import getl.examples.process.events.GenerateEventFiles
+import getl.examples.process.events.LoadEventFiles
 import org.junit.Test
 
 class EventsTest extends ExampleTest {
@@ -19,6 +20,12 @@ class EventsTest extends ExampleTest {
 
             // Clear table "events"
             h2Table('db:events') {
+                truncate()
+                assertEquals(0, countRow())
+            }
+
+            // Clear table "events"
+            h2Table('db:events_history') {
                 truncate()
                 assertEquals(0, countRow())
             }
@@ -72,6 +79,10 @@ class EventsTest extends ExampleTest {
                 }
                 assertEquals(18, fileList.countRow())
             }
+
+            // Call load events
+            callScript LoadEventFiles
+            assertEquals(1800, h2Table('db:events').countRow())
         }
     }
 }
