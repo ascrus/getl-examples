@@ -11,7 +11,6 @@ class ExampleRun extends Getl {
     /** Storage path for examples */
     static public final def WorkPath = FileUtils.SystemTempDir() + '/getl_examples'
 
-    /** Specify an initialization class when starting Getl applications */
     @Override
-    String getInitClassName() { Init.class.name }
+    protected Class useInitClass() { Init }
 }
