@@ -4,6 +4,3 @@ gradlew.bat
 .gradle
 gradle
 build
-
-### Config files for test modules
-config
