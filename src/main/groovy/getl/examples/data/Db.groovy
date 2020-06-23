@@ -19,7 +19,7 @@ useH2Connection h2Connection('db:con', true) {
     FileUtils.ValidFilePath(connectDatabase)
 
     // Specify the configuration section in which logins to the database are stored
-    loginsConfigStore = 'db_logins'
+    storedLogins = configContent.db_logins as Map
 
     // Set default schema for tables
     schemaName = 'demo'

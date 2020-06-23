@@ -34,7 +34,7 @@ class EventsTest extends ExampleTest {
             historypoint('db:points') { clearValue('events') }
 
             // Clear events storage
-            fileCleaner(files('events')) {
+            fileman.cleaner(files('events')) {
                 useSourcePath { mask = '{date}/*' }
                 removeFiles = true
                 removeEmptyDirs = true

@@ -23,7 +23,7 @@ files('events') {
 }
 
 // Processing events files
-fileProcessing(files('events')) {
+fileman.processing(files('events')) {
     // Remove processed file
     removeFiles = true
     // Remove empty directory after processing files
@@ -53,7 +53,7 @@ fileProcessing(files('events')) {
             fileName = inf.file.name
         }
         // Copy rows from json file to events table
-        copyRows(json('json:events'), h2Table('db:events'))
+        etl.copyRows(json('json:events'), h2Table('db:events'))
         // Confirm success of file processing operation
         inf.result = inf.completeResult
 

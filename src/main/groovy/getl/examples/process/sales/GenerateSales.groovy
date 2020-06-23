@@ -32,7 +32,7 @@ h2Table('sales') {
     def seq = sequence('sales')
 
     // Generate and write data to the sales table
-    rowsTo {
+    etl.rowsTo {
         // Lookup price map structure
         def priceLookup = h2Table('prices').lookup { key = 'id'; strategy = ORDER_STRATEGY }
 

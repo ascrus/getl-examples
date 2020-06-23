@@ -29,7 +29,7 @@ useH2Connection h2Connection('con') {
 // Work with table "Price"
 h2Table('prices') {
     // Generate and write data to table "Price"
-    rowsTo {
+    etl.rowsTo {
         // Code for inserting records into a table
         writeRow { add -> // Write descriptor
             add id: 1, name: 'Apple', create_date: DateUtils.now, price: 60.50, is_active: true, description: 'Not a macintosh.\nThis is fruit.'
@@ -51,7 +51,7 @@ h2Table('prices') {
 }
 
 // Copy customer data from the Xml resource file "customers.xml" to tables "Customers" and "Customers_Phones"
-copyRows(xml('xml:customers'), h2Table('customers')) {
+etl.copyRows(xml('xml:customers'), h2Table('customers')) {
     // Adding an write to the child table "Customers_Phones"
     childs('phones', h2Table('customers.phones')) {
         // Processing the child structure phones
