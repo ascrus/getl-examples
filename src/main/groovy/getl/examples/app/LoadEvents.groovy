@@ -2,6 +2,7 @@ package getl.examples.app
 
 import getl.examples.launcher.ExampleRun
 import getl.examples.process.events.GenerateEventFiles
+import getl.examples.process.events.LoadEventFiles
 
 /** Generate events in Json files and load these files into the database event table */
 class LoadEvents extends ExampleRun{
@@ -15,6 +16,6 @@ class LoadEvents extends ExampleRun{
         callScript GenerateEventFiles
 
         // Call the script to upload Json files to the database table
-        callScript LoadEvents
+        callScript LoadEventFiles
     }
 }
