@@ -12,5 +12,5 @@ class ExampleRun extends Getl {
     static public final def WorkPath = FileUtils.SystemTempDir() + '/getl_examples'
 
     @Override
-    protected Class useInitClass() { Init }
+    protected Class<Script> useInitClass() { Init }
 }
