@@ -21,10 +21,5 @@ repositories {
 }*/
 
 dependencies {
-    compile(group: 'net.sourceforge.getl', name: 'getl', version:version) {
-        exclude group: "com.github.xeroapi"
-        exclude group: "org.apache.hadoop"
-        exclude group: "com.force.api"
-    }
-//    compile fileTree(dir: 'jdbc')
+    implementation(group: 'net.sourceforge.getl', name: 'getl', version:version)
 }
