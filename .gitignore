@@ -1,6 +1,10 @@
 ### Gradle template
+.gradle/
+gradle/
+build/
 gradlew
 gradlew.bat
-.gradle
-gradle
-build
+
+## Idea
+.idea/
+out/
